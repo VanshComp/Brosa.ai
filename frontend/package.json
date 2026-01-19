@@ -1,0 +1,47 @@
+{
+  "name": "brosa-ai-frontend",
+  "version": "1.0.0",
+  "description": "Brosa AI - WhatsApp Ordering Platform Frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@splidejs/react-splide": "^0.7.12",
+    "@splidejs/splide": "^4.1.4",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "animejs": "^3.2.1",
+    "axios": "^1.6.0",
+    "echarts": "^5.4.3",
+    "framer-motion": "^10.16.0",
+    "p5": "^1.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intersection-observer": "^9.5.2",
+    "react-p5": "^1.3.35",
+    "react-particles": "^2.12.2",
+    "react-router-dom": "^6.8.0",
+    "splitting": "^1.0.6",
+    "tsparticles": "^2.12.0",
+    "typed.js": "^2.0.12"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.0",
+    "vite": "^4.4.5"
+  }
+}
