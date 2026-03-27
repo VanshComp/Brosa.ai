@@ -1,0 +1,35 @@
+{
+  "name": "brosa-ai-fullstack",
+  "version": "1.0.0",
+  "description": "Brosa AI - WhatsApp Ordering Platform Full-Stack Application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "lint": "cd frontend && npm run lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp",
+    "ordering",
+    "restaurant",
+    "qr-code",
+    "food-delivery",
+    "react",
+    "nodejs",
+    "full-stack"
+  ],
+  "author": "Brosa AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
