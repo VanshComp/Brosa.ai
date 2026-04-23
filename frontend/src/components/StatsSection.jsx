@@ -1,171 +1,130 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useCountUp } from '../hooks/useCountUp';
 
-const StatsSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  const stats = [
-    {
-      number: 5000,
-      suffix: '+',
-      label: 'Active Businesses',
-      description: 'Trusted by restaurants worldwide',
-      color: 'from-teal-500 to-teal-600',
-    },
-    {
-      number: 100000,
-      suffix: '+',
-      label: 'Orders Processed',
-      description: 'Seamless transactions completed',
-      color: 'from-blue-500 to-blue-600',
-    },
-    {
-      number: 99,
-      suffix: '%',
-      label: 'Customer Satisfaction',
-      description: 'Happy customers and business owners',
-      color: 'from-purple-500 to-purple-600',
-    },
-    {
-      number: 24,
-      suffix: '/7',
-      label: 'Support Available',
-      description: 'Always here to help you succeed',
-      color: 'from-emerald-500 to-emerald-600',
-    },
-  ];
-
-  return (
-    <section ref={ref} className="container-custom">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="text-center mb-16"
-      >
-        <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-          <span className="heading-gradient">Trusted by Businesses Worldwide</span>
-        </h2>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Join thousands of successful businesses that have transformed their ordering process with Brosa AI
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.05, y: -10 }}
-            className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 text-center overflow-x-hidden"
-          >
-            {/* Background Gradient */}
-            <div
-              className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity duration-300`}
-            ></div>
-
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Number */}
-              <motion.div
-                className="text-4xl lg:text-5xl font-bold mb-2"
-              >
-                <span className={`bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
-                  {isInView && (
-                    <Counter
-                      end={stat.number}
-                      suffix={stat.suffix}
-                      duration={2000}
-                      delay={index * 200}
-                    />
-                  )}
-                </span>
-              </motion.div>
-
-              {/* Label */}
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {stat.label}
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-gray-600">
-                {stat.description}
-              </p>
-            </div>
-
-            {/* Hover Effect */}
-            <motion.div
-              className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl`}
-            ></motion.div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Additional Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        viewport={{ once: true }}
-        className="mt-16 bg-gradient-to-r from-teal-500 to-blue-500 rounded-2xl p-8 text-white"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div>
-            <div className="text-3xl font-bold mb-2">3x</div>
-            <p className="text-teal-100">Faster Order Processing</p>
-          </div>
-          <div>
-            <div className="text-3xl font-bold mb-2">50%</div>
-            <p className="text-teal-100">Reduction in Staff Costs</p>
-          </div>
-          <div>
-            <div className="text-3xl font-bold mb-2">Zero</div>
-            <p className="text-teal-100">Technical Skills Required</p>
-          </div>
-        </div>
-      </motion.div>
-    </section>
-  );
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show:   { opacity: 1, y: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } },
+};
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.12 } },
 };
 
-// Counter Component
-const Counter = ({ end, suffix = '', duration = 2000, delay = 0 }) => {
-  const [count, setCount] = useState(0);
-  const countRef = useRef(0);
+const CARDS = [
+  {
+    icon: '🔐',
+    title: 'Secure Payments',
+    desc: 'Every transaction through Brosa is protected end-to-end. Customers transact with total confidence, vendors receive funds safely and instantly.',
+    color: '#14B8A6',
+  },
+  {
+    icon: '🛡️',
+    title: 'WhatsApp Native Privacy',
+    desc: "Brosa runs entirely inside WhatsApp's encrypted infrastructure, so you benefit from world-class security standards without any extra setup.",
+    color: '#0EA5E9',
+  },
+  {
+    icon: '📱',
+    title: 'Verified Business Account',
+    desc: 'Your Brosa storefront is tied to a verified WhatsApp Business number. Only you control your orders — no unauthorized access, ever.',
+    color: '#8B5CF6',
+  },
+];
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const startTime = Date.now();
-      const animate = () => {
-        const now = Date.now();
-        const progress = Math.min((now - startTime) / duration, 1);
-        const current = Math.floor(progress * end);
-        
-        if (current !== countRef.current) {
-          countRef.current = current;
-          setCount(current);
-        }
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        }
-      };
-      animate();
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [end, duration, delay]);
+const StatsSection = () => {
+  const ref    = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px 0px' });
 
   return (
-    <span>
-      {count.toLocaleString()}{suffix}
-    </span>
+    <section
+      ref={ref}
+      id="security"
+      className="stacked-section"
+      style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0fdf9 100%)', zIndex: 14 }}
+    >
+      <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
+
+        {/* Heading */}
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+          style={{ textAlign: 'center', marginBottom: '70px' }}
+        >
+          <motion.span
+            variants={fadeUp}
+            style={{
+              display: 'inline-block',
+              fontSize: '11px', fontWeight: '700',
+              letterSpacing: '0.12em', color: '#14B8A6',
+              textTransform: 'uppercase', marginBottom: '14px',
+            }}
+          >
+            Built on WhatsApp
+          </motion.span>
+          <motion.h2
+            variants={fadeUp}
+            style={{
+              fontSize: 'clamp(28px, 4vw, 46px)',
+              fontWeight: '800', color: '#0f1117',
+              letterSpacing: '-0.5px', maxWidth: '700px',
+              margin: '0 auto', lineHeight: '1.15',
+            }}
+          >
+            Secured with WhatsApp's Built-In Privacy Protections
+          </motion.h2>
+        </motion.div>
+
+        {/* Cards */}
+        <motion.div
+          className="security-grid"
+          variants={stagger}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}
+        >
+          {CARDS.map((card, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              whileHover={{ y: -6, boxShadow: '0 24px 56px rgba(0,0,0,0.1)' }}
+              transition={{ y: { type: 'spring', stiffness: 400, damping: 20 } }}
+              style={{
+                background: '#fff',
+                borderRadius: '20px',
+                padding: '36px 28px',
+                boxShadow: '0 2px 20px rgba(0,0,0,0.055)',
+              }}
+            >
+              <div style={{
+                width: '80px', height: '80px',
+                borderRadius: '18px',
+                background: `linear-gradient(135deg, ${card.color}18, ${card.color}32)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '36px', marginBottom: '24px',
+              }}>
+                {card.icon}
+              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1117', marginBottom: '10px' }}>
+                {card.title}
+              </h3>
+              <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.7' }}>
+                {card.desc}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .security-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 600px) {
+          .security-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
   );
 };
 

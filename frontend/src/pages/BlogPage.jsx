@@ -70,33 +70,33 @@ const BlogPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div style={{ background: '#FFF7ED', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       {/* Blog Hero */}
-      <section className="pt-32 pb-20 bg-slate-50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-teal-50 to-transparent opacity-50"></div>
-        <div className="container-custom max-w-4xl relative z-10">
+      <section style={{ paddingTop: '120px', paddingBottom: '80px', borderBottom: '1px solid rgba(249,115,22,0.1)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', background: 'linear-gradient(to left, rgba(249,115,22,0.05), transparent)' }}></div>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center gap-4 mb-6">
-              <span className="px-3 py-1 bg-teal-100 text-teal-700 rounded-lg text-sm font-bold uppercase tracking-wider">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+              <span style={{ padding: '6px 12px', background: 'rgba(249,115,22,0.1)', color: '#F97316', borderRadius: '8px', fontSize: '14px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {post.category}
               </span>
-              <span className="text-gray-400 font-medium">•</span>
-              <span className="text-gray-500 font-medium">{post.readTime}</span>
+              <span style={{ color: '#A8A29E', fontWeight: '500' }}>•</span>
+              <span style={{ color: '#78716C', fontWeight: '500' }}>{post.readTime}</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 leading-[1.1]">
+            <h1 style={{ fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: '900', color: '#1C0A00', marginBottom: '32px', lineHeight: '1.1', letterSpacing: '-1.5px' }}>
               {post.title}
             </h1>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-500 border-2 border-white shadow-sm">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', background: '#FFEDD5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', color: '#F97316', border: '2px solid #FFF7ED', boxShadow: '0 4px 12px rgba(249,115,22,0.15)' }}>
                 BT
               </div>
-              <div className="text-sm">
-                <p className="font-bold text-slate-900">{post.author}</p>
-                <p className="text-gray-500">{post.date}</p>
+              <div style={{ fontSize: '14px' }}>
+                <p style={{ fontWeight: '800', color: '#1C0A00', margin: 0 }}>{post.author}</p>
+                <p style={{ color: '#78716C', margin: 0, marginTop: '2px' }}>{post.date}</p>
               </div>
             </div>
           </motion.div>
@@ -104,40 +104,40 @@ const BlogPage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="py-20">
-        <div className="container-custom max-w-4xl">
-          <div className="prose prose-slate prose-xl max-w-none">
+      <section style={{ padding: '80px 0' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
+          <div>
             {post.content.map((block, idx) => {
               if (block.type === "paragraph") {
-                return <p key={idx} className="text-gray-700 font-light leading-relaxed mb-8">{block.text}</p>;
+                return <p key={idx} style={{ color: '#444', fontWeight: '400', fontSize: '18px', lineHeight: '1.8', marginBottom: '32px' }}>{block.text}</p>;
               }
               if (block.type === "heading") {
                 return (
-                  <h2 key={idx} className="text-3xl font-extrabold text-slate-900 mt-16 mb-8 flex items-center gap-4">
-                    <span className="h-8 w-1.5 bg-teal-500 rounded-full"></span>
+                  <h2 key={idx} style={{ fontSize: '32px', fontWeight: '900', color: '#1C0A00', marginTop: '64px', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '16px', letterSpacing: '-1px' }}>
+                    <span style={{ height: '32px', width: '6px', background: '#F97316', borderRadius: '4px' }}></span>
                     {block.text}
                   </h2>
                 );
               }
               if (block.type === "comparison") {
                 return (
-                  <div key={idx} className="grid md:grid-cols-2 gap-8 my-16">
-                    <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-                      <p className="font-bold text-slate-400 uppercase text-sm mb-6 tracking-widest">The Old Way</p>
-                      <ul className="space-y-4">
+                  <div key={idx} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', margin: '64px 0' }}>
+                    <div style={{ background: '#FFF', padding: '32px', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+                      <p style={{ fontWeight: '800', color: '#A8A29E', textTransform: 'uppercase', fontSize: '14px', marginBottom: '24px', letterSpacing: '0.1em' }}>The Old Way</p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         {block.from.map((item, i) => (
-                          <li key={i} className="flex items-center gap-3 text-slate-500 line-through decoration-slate-300">
-                            <span className="text-red-400">✕</span> {item}
+                          <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#A8A29E', textDecoration: 'line-through' }}>
+                            <span style={{ color: '#EF4444', fontWeight: 'bold' }}>✕</span> {item}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="bg-teal-900 p-8 rounded-3xl text-white shadow-2xl shadow-teal-200">
-                      <p className="font-bold text-teal-400 uppercase text-sm mb-6 tracking-widest">The Brosa Way</p>
-                      <ul className="space-y-4">
+                    <div style={{ background: '#1C0A00', padding: '32px', borderRadius: '24px', color: '#FFF', boxShadow: '0 24px 48px rgba(249,115,22,0.15)' }}>
+                      <p style={{ fontWeight: '800', color: '#F97316', textTransform: 'uppercase', fontSize: '14px', marginBottom: '24px', letterSpacing: '0.1em' }}>The Brosa Way</p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         {block.to.map((item, i) => (
-                          <li key={i} className="flex items-center gap-3">
-                            <span className="text-teal-400">✓</span> {item}
+                          <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFF' }}>
+                            <span style={{ color: '#F97316', fontWeight: 'bold' }}>✓</span> {item}
                           </li>
                         ))}
                       </ul>
@@ -147,15 +147,15 @@ const BlogPage = () => {
               }
               if (block.type === "list") {
                 return (
-                  <div key={idx} className="space-y-6 my-12">
+                  <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '24px', margin: '48px 0' }}>
                     {block.items.map((item, i) => (
-                      <div key={i} className="flex gap-6 p-6 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
-                        <div className="text-4xl font-black text-slate-200 group-hover:text-teal-200 transition-colors">
+                      <div key={i} style={{ display: 'flex', gap: '24px', padding: '24px', background: '#FFF', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.05)', transition: 'border-color 0.2s ease', cursor: 'default' }}>
+                        <div style={{ fontSize: '48px', fontWeight: '900', color: 'rgba(249,115,22,0.15)', lineHeight: 1 }}>
                           0{i + 1}
                         </div>
                         <div>
-                          <h4 className="font-bold text-slate-900 text-xl mb-1">{item.title}</h4>
-                          <p className="text-gray-600 font-light">{item.description}</p>
+                          <h4 style={{ fontWeight: '800', color: '#1C0A00', fontSize: '20px', marginBottom: '8px' }}>{item.title}</h4>
+                          <p style={{ color: '#444', fontWeight: '400', fontSize: '16px', lineHeight: '1.6' }}>{item.description}</p>
                         </div>
                       </div>
                     ))}
@@ -164,10 +164,9 @@ const BlogPage = () => {
               }
               if (block.type === "callout") {
                 return (
-                  <div key={idx} className="my-16 p-10 bg-slate-900 rounded-[3rem] relative overflow-hidden text-center group">
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-teal-500/20 to-transparent"></div>
-                    <p className="text-2xl md:text-3xl font-bold text-white relative z-10 leading-tight">
-                      "{block.text.split('"')[1]}"
+                  <div key={idx} style={{ margin: '64px 0', padding: '40px', background: '#F97316', borderRadius: '48px', textAlign: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 24px 48px rgba(249,115,22,0.2)' }}>
+                    <p style={{ fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: '800', color: '#FFF', position: 'relative', zIndex: 10, lineHeight: '1.4', fontStyle: 'italic' }}>
+                      "{block.text}"
                     </p>
                   </div>
                 );
@@ -176,36 +175,23 @@ const BlogPage = () => {
             })}
           </div>
 
-          <div className="mt-24 pt-12 border-t border-gray-100">
-            <div className="bg-teal-50 rounded-[2.5rem] p-12 text-center border border-teal-100">
-              <h3 className="text-3xl font-black text-slate-900 mb-4 italic">Ready to experience the shift?</h3>
-              <p className="text-gray-600 mb-8 max-w-xl mx-auto">
+          <div style={{ marginTop: '96px', paddingTop: '48px', borderTop: '1px solid rgba(249,115,22,0.1)' }}>
+            <div style={{ background: 'rgba(249,115,22,0.05)', borderRadius: '40px', padding: '48px', textAlign: 'center', border: '1px solid rgba(249,115,22,0.1)' }}>
+              <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#1C0A00', marginBottom: '16px', letterSpacing: '-1px' }}>Ready to experience the shift?</h3>
+              <p style={{ color: '#78716C', marginBottom: '32px', maxWidth: '500px', margin: '0 auto 32px', fontSize: '18px' }}>
                 Join thousands of users in Ghana ordering smarter every day. No app. Just chat.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#" className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
-                  Try Brosa on WhatsApp
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+                <a href="https://brosa-ai-ltd.blogspot.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', padding: '16px 32px', background: '#F97316', color: '#FFF', borderRadius: '16px', fontWeight: '800', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.25)', transition: 'all 0.2s' }}>
+                  More Blog →
                 </a>
-                <Link to="/contact" className="px-10 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
-                  Contact Sales
-                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Share Section */}
-      <footer className="py-12 bg-white border-t border-gray-50">
-        <div className="container-custom max-w-4xl text-center">
-          <p className="text-gray-400 font-bold uppercase text-xs tracking-[0.3em] mb-6">Spread the Word</p>
-          <div className="flex justify-center gap-8 text-gray-400">
-            <a href="#" className="hover:text-teal-600 transition-colors"><span className="font-bold">Twitter / X</span></a>
-            <a href="#" className="hover:text-teal-600 transition-colors"><span className="font-bold">LinkedIn</span></a>
-            <a href="#" className="hover:text-teal-600 transition-colors"><span className="font-bold">Facebook</span></a>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 };

@@ -398,14 +398,16 @@ const ContactPage = () => {
           >
             Don't wait - start your free trial today and see how Brosa AI can help your business grow
           </motion.p>
-          <motionLink
-            to="/register"
+          <motion.a
+            href="YOUR_GOOGLE_FORM_LINK_HERE"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Start Free Trial
-          </motionLink>
+          </motion.a>
         </div>
       </section>
     </div>

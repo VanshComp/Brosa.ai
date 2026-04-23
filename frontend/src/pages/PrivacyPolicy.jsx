@@ -52,7 +52,7 @@ const PrivacyPolicy = () => {
             <li><strong>Legal Obligations:</strong> When required by law, regulation, or to protect our rights.</li>
             <li><strong>Business Transfers:</strong> In case of a merger, acquisition, or sale of assets, your information may be transferred to the new entity.</li>
           </ul>
-          <p className="mt-4 font-semibold text-teal-800">We do not sell your personal information to third parties.</p>
+          <p style={{ marginTop: '16px', fontWeight: '600', color: '#EA580C' }}>We do not sell your personal information to third parties.</p>
         </>
       )
     },
@@ -87,7 +87,7 @@ const PrivacyPolicy = () => {
             <li>Object to or restrict processing of your data.</li>
             <li>Withdraw consent to data processing (where applicable).</li>
           </ul>
-          <p className="mt-4">Requests can be made by contacting us at <a href="mailto:hello@brosa.ai" className="text-teal-600 hover:underline">hello@brosa.ai</a>.</p>
+          <p style={{ marginTop: '16px' }}>Requests can be made by contacting us at <a href="mailto:hello@brosa.ai" style={{ color: '#F97316', textDecoration: 'none', fontWeight: '500' }}>hello@brosa.ai</a>.</p>
         </>
       )
     },
@@ -131,10 +131,10 @@ const PrivacyPolicy = () => {
       id: 11,
       title: "Contact Us",
       content: (
-        <div className="bg-teal-50 p-6 rounded-2xl border border-teal-100">
-          <p className="font-bold text-teal-900 mb-4 text-xl">Brosa AI Ltd</p>
-          <div className="space-y-2 text-gray-700">
-            <p><strong>Email:</strong> <a href="mailto:hello@brosa.ai" className="text-teal-600 hover:underline">hello@brosa.ai</a></p>
+        <div style={{ background: 'rgba(249,115,22,0.05)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(249,115,22,0.1)' }}>
+          <p style={{ fontWeight: '800', color: '#1C0A00', marginBottom: '16px', fontSize: '20px' }}>Brosa AI Ltd</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#444' }}>
+            <p><strong>Email:</strong> <a href="mailto:hello@brosa.ai" style={{ color: '#F97316', textDecoration: 'none', fontWeight: '500' }}>hello@brosa.ai</a></p>
             <p><strong>Phone:</strong> +233 20 343 1334 / +233 24 136 6340</p>
             <p><strong>Address:</strong> 14 Hayford Road, Airport Commercial Area, Accra, Ghana</p>
           </div>
@@ -144,30 +144,30 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div style={{ background: '#FFF7ED', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       {/* Hero Header */}
-      <section className="bg-slate-50 pt-32 pb-16 border-b border-gray-200">
-        <div className="container-custom max-w-4xl">
+      <section style={{ paddingTop: '120px', paddingBottom: '60px', borderBottom: '1px solid rgba(249,115,22,0.1)' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-extrabold text-teal-900 mb-4">
+            <h1 style={{ fontSize: 'clamp(36px, 5vw, 54px)', fontWeight: '900', color: '#1C0A00', marginBottom: '16px', letterSpacing: '-1.5px' }}>
               Privacy Policy
             </h1>
-            <p className="text-gray-500 italic">
+            <p style={{ color: '#78716C', fontStyle: 'italic', fontSize: '18px' }}>
               This Privacy Policy was last revised on {lastUpdated}.
             </p>
-            <div className="h-1 w-20 bg-teal-500 mt-6 rounded-full"></div>
+            <div style={{ height: '4px', width: '80px', background: '#F97316', marginTop: '24px', borderRadius: '4px' }}></div>
           </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 md:py-24">
-        <div className="container-custom max-w-4xl">
-          <div className="space-y-16">
+      <section style={{ padding: '80px 0' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}>
             {sections.map((section, index) => (
               <motion.div
                 key={section.id}
@@ -175,13 +175,12 @@ const PrivacyPolicy = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="prose prose-teal max-w-none"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-start">
-                  <span className="text-teal-600 mr-4 font-mono">{section.id}.</span>
+                <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#1C0A00', marginBottom: '20px', display: 'flex', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#F97316', marginRight: '16px', fontFamily: 'monospace' }}>{section.id}.</span>
                   {section.title}
                 </h2>
-                <div className="text-lg text-gray-600 leading-relaxed font-light">
+                <div style={{ fontSize: '17px', color: '#444', lineHeight: '1.8', fontWeight: '400' }}>
                   {section.content}
                 </div>
               </motion.div>
@@ -192,12 +191,19 @@ const PrivacyPolicy = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-20 pt-10 border-t border-gray-100 text-center"
+            style={{ marginTop: '80px', paddingTop: '40px', borderTop: '1px solid rgba(249,115,22,0.1)', textAlign: 'center' }}
           >
-            <p className="text-gray-500 mb-6 font-medium">Ready to get back?</p>
+            <p style={{ color: '#78716C', marginBottom: '24px', fontWeight: '500' }}>Ready to get back?</p>
             <Link
               to="/"
-              className="inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+              style={{
+                display: 'inline-flex', alignItems: 'center', padding: '16px 32px',
+                background: '#F97316', color: '#FFF', borderRadius: '100px',
+                fontWeight: '700', textDecoration: 'none', transition: 'all 0.2s',
+                boxShadow: '0 8px 24px rgba(249,115,22,0.25)'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(249,115,22,0.35)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(249,115,22,0.25)'; }}
             >
               ← Back to Homepage
             </Link>

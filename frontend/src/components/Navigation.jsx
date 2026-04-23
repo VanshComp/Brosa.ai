@@ -1,142 +1,312 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../images/brosa-logo.png';
 
-/* framer-motion wrapped router link */
-const MotionLink = motion(RouterLink);
+const NAV_HEIGHT = 72;
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
+  // Track scroll for sticky nav style
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/services', label: 'Services' },
-    { path: '/contact', label: 'Contact' },
+    { id: 'solutions', label: 'Solutions' },
+    { id: 'features', label: 'Features' },
+    { id: 'payments', label: 'Payments' },
+    { id: 'faq', label: 'FAQ' },
   ];
 
+  // Smooth scroll with correct offset for nav height
+  const scrollToSection = useCallback((id) => {
+    setIsMobileMenuOpen(false);
+    
+    if (location.pathname !== '/') {
+      // If not on home page, navigate to home and pass the target id
+      navigate('/', { state: { scrollTo: id } });
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT - 8;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }, [location.pathname, navigate]);
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-lg border-b border-gray-100'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="container-custom">
-        <div className="flex items-center justify-between h-20">
+    <>
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 120 }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          height: `${NAV_HEIGHT}px`,
+          backgroundColor: isScrolled ? 'rgba(255,251,245,0.96)' : 'rgba(255,255,255,0)',
+          backdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
+          borderBottom: isScrolled ? '1px solid rgba(234,88,12,0.08)' : '1px solid transparent',
+          boxShadow: isScrolled ? '0 4px 24px rgba(249,115,22,0.07)' : 'none',
+          transition: 'background-color 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
+        }}
+      >
+        <div style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 24px',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+
           {/* Logo */}
-          <RouterLink to="/" className="flex items-center space-x-3">
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
-              <img src={logo} alt="Brosa AI" className="h-24 w-auto" />
-            </motion.div>
+          <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+            <motion.img
+              src={logo}
+              alt="Brosa AI"
+              whileHover={{ scale: 1.04 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              style={{ height: '72px', width: 'auto', display: 'block' }}
+            />
           </RouterLink>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Nav Links — centered */}
+          <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {navItems.map((item) => (
-              <RouterLink
-                key={item.path}
-                to={item.path}
-                className={`nav-link relative font-medium transition-colors duration-300 ${
-                  location.pathname === item.path
-                    ? 'text-teal-600'
-                    : 'text-gray-700 hover:text-teal-600'
-                }`}
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#374151',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontFamily: 'inherit',
+                  letterSpacing: '-0.01em',
+                  transition: 'color 0.2s ease, background-color 0.2s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#EA580C';
+                  e.currentTarget.style.backgroundColor = 'rgba(249,115,22,0.07)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#374151';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
               >
                 {item.label}
-                {location.pathname === item.path && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-teal-500 to-blue-500"
-                    initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-              </RouterLink>
+              </button>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300"
-            aria-label="Toggle menu"
-          >
-            <div className="w-6 h-6 flex flex-col justify-center items-center relative">
-              <span
-                className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-                  isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : '-translate-y-0.5'
-                }`}
-              />
-              <span
-                className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-1 ${
-                  isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
-                }`}
-              />
-              <span
-                className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-                  isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : 'translate-y-0.5'
-                }`}
-              />
-            </div>
-          </motion.button>
-        </div>
-      </div>
+          {/* Right side: CTA + Mobile Burger */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <motion.a
+              href="https://wa.me/message/52KOT5KCITWJB1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="desktop-cta"
+              whileHover={{ scale: 1.04, y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'linear-gradient(135deg, #F97316, #EA580C)',
+                color: '#fff',
+                padding: '9px 20px',
+                borderRadius: '10px',
+                fontSize: '14px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                letterSpacing: '-0.01em',
+                boxShadow: '0 4px 16px rgba(249,115,22,0.30)',
+              }}
+            >
+              Try it Out
+            </motion.a>
 
-      {/* Mobile Menu Panel */}
+            {/* Hamburger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              className="mobile-burger"
+              aria-label="Toggle navigation"
+              aria-expanded={isMobileMenuOpen}
+              style={{
+                display: 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                width: '40px',
+                height: '40px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: '5px',
+                borderRadius: '8px',
+              }}
+            >
+              <span style={{
+                display: 'block', width: '20px', height: '2px',
+                backgroundColor: '#1a1a1a', borderRadius: '2px',
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transform: isMobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
+              }} />
+              <span style={{
+                display: 'block', width: '20px', height: '2px',
+                backgroundColor: '#1a1a1a', borderRadius: '2px',
+                transition: 'opacity 0.3s ease',
+                opacity: isMobileMenuOpen ? 0 : 1,
+              }} />
+              <span style={{
+                display: 'block', width: '20px', height: '2px',
+                backgroundColor: '#1a1a1a', borderRadius: '2px',
+                transition: 'transform 0.3s ease',
+                transform: isMobileMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none',
+              }} />
+            </button>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100"
-            style={{ pointerEvents: isMobileMenuOpen ? 'auto' : 'none' }}
-          >
-            <div className="container-custom py-6">
-              <div className="flex flex-col space-y-4">
-                {navItems.map((item, index) => (
-                  <MotionLink
-                    key={item.path}
-                    to={item.path}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-lg font-medium py-2 transition-colors duration-300 ${
-                      location.pathname === item.path
-                        ? 'text-teal-600'
-                        : 'text-gray-700 hover:text-teal-600'
-                    }`}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                zIndex: 998,
+              }}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ type: 'spring', damping: 24, stiffness: 200 }}
+              style={{
+                position: 'fixed',
+                top: `${NAV_HEIGHT}px`,
+                left: 0,
+                right: 0,
+                zIndex: 999,
+                backgroundColor: '#fff',
+                borderBottom: '1px solid rgba(0,0,0,0.08)',
+                boxShadow: '0 16px 48px rgba(0,0,0,0.12)',
+                padding: '16px 24px 24px',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
+                {navItems.map((item, i) => (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05, type: 'spring', damping: 20 }}
+                    onClick={() => scrollToSection(item.id)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '17px',
+                      fontWeight: '500',
+                      color: '#1a1a1a',
+                      padding: '14px 12px',
+                      textAlign: 'left',
+                      fontFamily: 'inherit',
+                      borderRadius: '10px',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(249,115,22,0.06)'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     {item.label}
-                  </MotionLink>
+                  </motion.button>
                 ))}
               </div>
-            </div>
-          </motion.div>
+              <motion.a
+                href="https://wa.me/message/52KOT5KCITWJB1"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, type: 'spring', damping: 20 }}
+                style={{
+                  display: 'block',
+                  background: 'linear-gradient(135deg, #F97316, #EA580C)',
+                  color: '#fff',
+                  padding: '15px 24px',
+                  borderRadius: '12px',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  textDecoration: 'none',
+                  textAlign: 'center',
+                  boxShadow: '0 6px 20px rgba(249,115,22,0.32)',
+                }}
+              >
+                Try it Out
+              </motion.a>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </motion.nav>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .desktop-cta { display: none !important; }
+          .mobile-burger { display: flex !important; }
+        }
+      `}</style>
+    </>
   );
 };
 

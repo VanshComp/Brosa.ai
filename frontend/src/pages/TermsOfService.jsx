@@ -101,7 +101,7 @@ const TermsOfService = () => {
       title: "Privacy",
       content: (
         <p>
-          Your use of our platform is also governed by our <Link to="/privacy" className="text-teal-600 hover:underline">Privacy Policy</Link>, which explains how we collect, use, and protect your information.
+          Your use of our platform is also governed by our <Link to="/privacy" style={{ color: '#F97316', textDecoration: 'none', fontWeight: '500' }}>Privacy Policy</Link>, which explains how we collect, use, and protect your information.
         </p>
       )
     },
@@ -127,10 +127,10 @@ const TermsOfService = () => {
       id: 13,
       title: "Contact Us",
       content: (
-        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-          <p className="font-bold text-slate-900 mb-4 text-xl">Brosa AI Ltd</p>
-          <div className="space-y-2 text-gray-700 font-light">
-            <p><strong>Email:</strong> <a href="mailto:hello@brosa.ai" className="text-teal-600 hover:underline">hello@brosa.ai</a></p>
+        <div style={{ background: 'rgba(249,115,22,0.05)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(249,115,22,0.1)' }}>
+          <p style={{ fontWeight: '800', color: '#1C0A00', marginBottom: '16px', fontSize: '20px' }}>Brosa AI Ltd</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#444' }}>
+            <p><strong>Email:</strong> <a href="mailto:hello@brosa.ai" style={{ color: '#F97316', textDecoration: 'none', fontWeight: '500' }}>hello@brosa.ai</a></p>
             <p><strong>Phone:</strong> +233 20 343 1334 / +233 24 136 6340</p>
             <p><strong>Address:</strong> 14 Hayford Road, Airport Commercial Area, Accra, Ghana</p>
           </div>
@@ -140,30 +140,30 @@ const TermsOfService = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div style={{ background: '#FFF7ED', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       {/* Hero Header */}
-      <section className="bg-slate-50 pt-32 pb-16 border-b border-gray-200">
-        <div className="container-custom max-w-4xl">
+      <section style={{ paddingTop: '120px', paddingBottom: '60px', borderBottom: '1px solid rgba(249,115,22,0.1)' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
+            <h1 style={{ fontSize: 'clamp(36px, 5vw, 54px)', fontWeight: '900', color: '#1C0A00', marginBottom: '16px', letterSpacing: '-1.5px' }}>
               Terms and Conditions
             </h1>
-            <p className="text-gray-500 italic">
+            <p style={{ color: '#78716C', fontStyle: 'italic', fontSize: '18px' }}>
               Effective Date: {lastUpdated}.
             </p>
-            <div className="h-1 w-20 bg-slate-900 mt-6 rounded-full"></div>
+            <div style={{ height: '4px', width: '80px', background: '#F97316', marginTop: '24px', borderRadius: '4px' }}></div>
           </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 md:py-24">
-        <div className="container-custom max-w-4xl">
-          <div className="space-y-16">
+      <section style={{ padding: '80px 0' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}>
             {sections.map((section, index) => (
               <motion.div
                 key={section.id}
@@ -171,33 +171,17 @@ const TermsOfService = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="prose prose-slate max-w-none"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-start underline decoration-teal-500/30 decoration-4 underline-offset-8">
-                  <span className="text-teal-600 mr-4 font-mono">{section.id}.</span>
+                <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#1C0A00', marginBottom: '20px', display: 'flex', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#F97316', marginRight: '16px', fontFamily: 'monospace' }}>{section.id}.</span>
                   {section.title}
                 </h2>
-                <div className="text-lg text-gray-600 leading-relaxed font-light">
+                <div style={{ fontSize: '17px', color: '#444', lineHeight: '1.8', fontWeight: '400' }}>
                   {section.content}
                 </div>
               </motion.div>
             ))}
           </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-20 pt-10 border-t border-gray-100 text-center"
-          >
-            <p className="text-gray-500 mb-6 font-medium">Have questions?</p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-8 py-3 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
-            >
-              Contact Support
-            </Link>
-          </motion.div>
         </div>
       </section>
     </div>

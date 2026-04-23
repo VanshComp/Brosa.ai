@@ -1,98 +1,157 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 36 },
+  show:   { opacity: 1, y: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } },
+};
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.07 } },
+};
+
+const FAQS = [
+  {
+    q: 'What is Brosa?',
+    a: 'Brosa is an AI-powered WhatsApp ordering platform that lets customers browse menus, place orders, and pay — all without downloading any app. Vendors manage their storefront entirely through WhatsApp.',
+  },
+  {
+    q: 'How does Brosa work?',
+    a: 'Customers scan a Brosa QR code or tap a WhatsApp link. Our AI assistant guides them through your menu, takes their order, and processes payment — all inside a natural WhatsApp conversation.',
+  },
+  {
+    q: 'Is Brosa secure?',
+    a: "Yes. Brosa operates within WhatsApp's end-to-end encrypted environment. All payments are handled via verified, secure payment gateways with no financial data stored on our servers.",
+  },
+  {
+    q: 'How do I get started with Brosa?',
+    a: 'Setup takes just 5 minutes. Register your business, add your menu items, and get your QR code. No technical knowledge required.',
+  },
+  {
+    q: 'What if customers have questions?',
+    a: "Brosa's AI handles common customer queries automatically — order status, menu details, business hours, and more. You can also take over any conversation at any time.",
+  },
+  {
+    q: 'What happens if there is an issue with an order?',
+    a: 'Both the customer and vendor are notified immediately. Our support team is also available via WhatsApp to resolve any issues quickly and professionally.',
+  },
+  {
+    q: 'Does Brosa work for all types of businesses?',
+    a: 'Absolutely. Brosa works for restaurants, street food vendors, grocery shops, beauty salons, pharmacies, and more. If you sell something, Brosa can help you sell it through WhatsApp.',
+  },
+];
 
 const CTASection = () => {
+  const [open, setOpen] = useState(null);
+  const ref    = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px 0px' });
+
   return (
-    <section className="container-custom">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="relative bg-gradient-to-br from-teal-600 via-blue-600 to-purple-600 rounded-3xl p-12 lg:p-16 text-white overflow-x-hidden"
-      >
-        {/* Background Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+    <section
+      ref={ref}
+      id="faq"
+      className="stacked-section"
+      style={{ background: '#f5f5f0', zIndex: 16 }}
+    >
+      <div style={{ width: '100%', maxWidth: '860px', margin: '0 auto', padding: '40px 24px' }}>
 
-        <div className="relative z-10 text-center">
+        {/* Heading */}
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+          style={{ textAlign: 'center', marginBottom: '64px' }}
+        >
+          <motion.span
+            variants={fadeUp}
+            style={{
+              display: 'inline-block', fontSize: '11px', fontWeight: '700',
+              letterSpacing: '0.12em', color: '#14B8A6',
+              textTransform: 'uppercase', marginBottom: '14px',
+            }}
+          >
+            Got Questions?
+          </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+            variants={fadeUp}
+            style={{
+              fontSize: 'clamp(30px, 5vw, 54px)',
+              fontWeight: '800', color: '#0f1117',
+              letterSpacing: '-0.5px',
+            }}
           >
-            Launch Your Brosa<br />
-            <span className="text-teal-200">WhatsApp Store Today</span>
+            Frequently Asked Questions
           </motion.h2>
+        </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-xl lg:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto leading-relaxed"
-          >
-            Simplify sales with Brosa on WhatsApp. Save time and serve more customers faster.
-            Promote your offers directly to customers on WhatsApp.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12"
-          >
-            <motionLink
-              to="/register"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 255, 255, 0.2)' }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-teal-600 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+        {/* Accordion */}
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+        >
+          {FAQS.map((faq, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              style={{ borderBottom: '1px solid rgba(0,0,0,0.09)' }}
             >
-              Register Your Store
-            </motionLink>
-            <motionLink
-              to="/demo"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-teal-600 transition-all duration-300"
-            >
-              Try Brosa Demo
-            </motionLink>
-          </motion.div>
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                style={{
+                  width: '100%', textAlign: 'left',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  padding: '26px 0',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  gap: '16px', fontFamily: 'inherit',
+                }}
+              >
+                <span style={{
+                  fontSize: '16px', fontWeight: '600', lineHeight: '1.35',
+                  transition: 'color 0.2s ease',
+                  color: open === i ? '#14B8A6' : '#0f1117',
+                }}>
+                  {faq.q}
+                </span>
+                <motion.div
+                  animate={{ rotate: open === i ? 45 : 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                  style={{
+                    width: '28px', height: '28px', borderRadius: '50%',
+                    border: `1.5px solid ${open === i ? '#14B8A6' : 'rgba(0,0,0,0.18)'}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '18px', color: open === i ? '#14B8A6' : '#0f1117',
+                    flexShrink: 0, transition: 'border-color 0.2s ease, color 0.2s ease',
+                    lineHeight: 1,
+                  }}
+                >
+                  +
+                </motion.div>
+              </button>
 
-          {/* Trust Indicators */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm text-blue-100"
-          >
-            <div className="flex items-center space-x-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>Simple & Fast</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>No credit card required</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>Setup in 5 minutes</span>
-            </div>
-          </motion.div>
-        </div>
-      </motion.div>
+              <AnimatePresence initial={false}>
+                {open === i && (
+                  <motion.div
+                    key="answer"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ height: { type: 'spring', damping: 26, stiffness: 200 }, opacity: { duration: 0.2 } }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <p style={{
+                      fontSize: '15px', color: '#64748b',
+                      lineHeight: '1.72', paddingBottom: '26px', maxWidth: '700px',
+                    }}>
+                      {faq.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 };

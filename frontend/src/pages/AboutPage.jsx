@@ -318,14 +318,16 @@ const AboutPage = () => {
             Ready to transform your business with WhatsApp ordering? Start your
             journey with us today.
           </motion.p>
-          <motionLink
-            to="/register"
+          <motion.a
+            href="YOUR_GOOGLE_FORM_LINK_HERE"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Get Started Today
-          </motionLink>
+          </motion.a>
         </div>
       </section>
     </div>
