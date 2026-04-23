@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+const MotionLink = motion(Link);
+
 
 const ServicesPage = () => {
   const [selectedPlan, setSelectedPlan] = useState('monthly');
@@ -398,14 +400,14 @@ const ServicesPage = () => {
           >
             Join thousands of businesses already using Brosa AI to streamline their ordering process
           </motion.p>
-          <motionLink
+          <MotionLink
             to="/"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Start Your Free Trial
-          </motionLink>
+          </MotionLink>
         </div>
       </section>
     </div>

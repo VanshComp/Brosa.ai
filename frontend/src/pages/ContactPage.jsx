@@ -399,7 +399,7 @@ const ContactPage = () => {
             Don't wait - start your free trial today and see how Brosa AI can help your business grow
           </motion.p>
           <motion.a
-            href="YOUR_GOOGLE_FORM_LINK_HERE"
+            href="https://forms.gle/M2bzMeER3nURvzyM9"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}

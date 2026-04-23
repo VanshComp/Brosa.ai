@@ -105,7 +105,7 @@ const CTABannerSection = () => {
                 Learn More
               </motion.a>
               <motion.a
-                href="YOUR_GOOGLE_FORM_LINK_HERE"
+                href="https://forms.gle/M2bzMeER3nURvzyM9"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.04, y: -2, boxShadow: '0 14px 36px rgba(30,58,138,0.35)' }}
