@@ -95,6 +95,31 @@ body {
   align-items: center;
 }
 
+/* ── Mobile Resets for GSAP sections ── */
+@media (max-width: 900px) {
+  .gs-wrap, .gs-wrap--tall, .gs-wrap--short, .gs-wrap--hero {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  .gs-bg {
+    position: relative !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: hidden !important;
+  }
+  .gs-content {
+    position: relative !important;
+    inset: auto !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .gs-proxy {
+    display: none !important;
+  }
+}
+
 @media (max-width: 900px) {
   .two-col { grid-template-columns: 1fr; gap: 40px; }
   .two-col .col-phone { order: -1; }
@@ -118,6 +143,17 @@ body {
   line-height: 1.06;
   letter-spacing: -1.5px;
   margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .t-h1 {
+    font-size: clamp(32px, 8vw, 42px);
+    letter-spacing: -1px;
+  }
+  .t-h2 {
+    font-size: clamp(28px, 7vw, 36px);
+  }
 }
 
 .t-h2 {
@@ -228,6 +264,15 @@ body {
   position: relative;
 }
 
+.hero-phone-pad {
+  padding: 30px 50px 30px 40px;
+}
+@media (max-width: 600px) {
+  .hero-phone-pad {
+    padding: 20px 15px;
+  }
+}
+
 .phone-frame {
   width: 252px;
   border-radius: 36px;
@@ -235,6 +280,13 @@ body {
   padding: 8px;
   box-shadow: 0 50px 100px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.07);
   flex-shrink: 0;
+}
+
+@media (max-width: 400px) {
+  .phone-frame {
+    transform: scale(0.9);
+    transform-origin: center top;
+  }
 }
 
 .phone-screen {

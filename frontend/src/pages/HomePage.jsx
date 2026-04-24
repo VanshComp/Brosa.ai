@@ -222,6 +222,54 @@ const typePhrases = [
   [ { text: "No Apps. No Stress. ", color: "dark" }, { text: "Just Orders.", color: "orange" } ]
 ];
 
+const heroMessages = [
+  { type:'user', text:'Order jollof rice for me 🍛' },
+  { type:'bot',  text:"Mama Abena's — GHS 30 each. How many?" },
+  { type:'user', text:'2 please!' },
+  { type:'bot',  text:'✅ Total GHS 60. Pay now?' },
+  { type:'user', text:'Yes pay now!' },
+  { type:'bot',  text:'💰 Done! Ready in ~20 mins.' },
+];
+
+const foodMessages = [
+  { type: 'photoCard', image: food1, title: 'Spicy Jollof Rice', price: 'GHS 45' },
+  { type: 'photoCard', image: food2, title: 'Grilled Tilapia', price: 'GHS 60' },
+  { type: 'click_action', itemIndex: 1 },
+  { type: 'bot',  text: 'Total GHS 60. Confirm?' },
+  { type: 'user', text: 'Yes, confirm!' },
+  { type: 'bot',  text: '💰 Order placed! Ready in 20m.' },
+];
+
+const busMessages = [
+  { type: 'user', text: 'Book VIP Jeoun bus to Kumasi 🚌' },
+  { type: 'photoCard', image: busBookingGuy, title: 'VIP Jeoun (Accra to Kumasi)', price: 'GHS 150', clicked: false },
+  { type: 'click_action', itemIndex: 1 },
+  { type: 'bot',  text: 'Confirm & Pay' },
+  { type: 'user', text: 'GHS 150 Paid' },
+  { type: 'bot',  text: 'Have a happy journey' },
+];
+
+const multiMessages = [
+  { type:'user', text:'Book VIP Jeoun bus to Kumasi 🚌' },
+  { type:'bot',  text:'🎟️ VIP Jeoun (Accra to Kumasi). 2:00 PM available. 1 Seat?' },
+  { type:'user', text:'Yes, and 2 Silverbird movie tickets for tonight 🍿' },
+  { type:'bot',  text:'✅ Bus & Movie tickets secured! Pay GHS 350 to confirm.' },
+];
+
+const analyticsMessages = [
+  { type:'bot',  text:'📊 Today: 47 orders · GHS 2,340' },
+  { type:'user', text:'Show top items' },
+  { type:'bot',  text:'🥇 Jollof Rice — 18 sold' },
+];
+
+const paymentMessages = [
+  { type: 'bot',  text: 'Select Payment Method:\n1. 🟡 MTN MoMo\n2. 🔴 Vodafone Cash\n3. 🔵 AirtelTigo Money\n4. 💳 Visa / Master Card' },
+  { type: 'user', text: '4. Visa Card' },
+  { type: 'bot',  text: 'Processing Visa payment for GHS 150...' },
+  { type: 'bot',  text: '✅ Payment Successful! Receipt: #BR782' },
+];
+
+
 const HomePage = () => {
   const rootRef = useRef(null);
 
@@ -275,33 +323,36 @@ const HomePage = () => {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      let mm = gsap.matchMedia();
 
-      // GPU-accelerate all scene backgrounds
-      gsap.set('.gs-bg', {
-        position: 'fixed', inset: 0,
-        force3D: true,
-        willChange: 'transform, opacity',
-      });
-      gsap.set('.gs-proxy', { position:'absolute', inset:0, zIndex:20, pointerEvents:'none' });
-      // Ensure all interactive content inside fixed panels can receive clicks
-      gsap.set('.gs-content', { pointerEvents:'all' });
+      mm.add("(min-width: 901px)", () => {
+        // GPU-accelerate all scene backgrounds
+        gsap.set('.gs-bg', {
+          position: 'fixed', inset: 0,
+          force3D: true,
+          willChange: 'transform, opacity',
+        });
+        gsap.set('.gs-proxy', { position:'absolute', inset:0, zIndex:20, pointerEvents:'none' });
+        // Ensure all interactive content inside fixed panels can receive clicks
+        gsap.set('.gs-content', { pointerEvents:'all' });
 
-      // Hero exit — scale + fade (GPU only)
-      gsap.set('#hero-bg', { zIndex:1, transformOrigin:'50% 30%', force3D:true });
-      gsap.to('#hero-bg', {
-        scale: 0.82, yPercent: -6, opacity: 0,
-        ease: 'none',
-        scrollTrigger: { trigger:'#hero-wrap', start:'top top', end:'bottom top', scrub:true },
-      });
+        // Hero exit — scale + fade (GPU only)
+        gsap.set('#hero-bg', { zIndex:1, transformOrigin:'50% 30%', force3D:true });
+        gsap.to('#hero-bg', {
+          scale: 0.82, yPercent: -6, opacity: 0,
+          ease: 'none',
+          scrollTrigger: { trigger:'#hero-wrap', start:'top top', end:'bottom top', scrub:true },
+        });
 
-      // All scene panels — pure translateY (GPU compositor)
-      const sceneBgs = gsap.utils.toArray('.scene-bg');
-      sceneBgs.forEach((bg, i) => {
-        const wrap = bg.closest('.gs-wrap');
-        gsap.set(bg, { yPercent:100, zIndex:2+i, force3D:true, willChange:'transform' });
-        gsap.to(bg, {
-          yPercent: 0, ease: 'none',
-          scrollTrigger: { trigger:wrap, start:'top bottom', end:'top top', scrub:true },
+        // All scene panels — pure translateY (GPU compositor)
+        const sceneBgs = gsap.utils.toArray('.scene-bg');
+        sceneBgs.forEach((bg, i) => {
+          const wrap = bg.closest('.gs-wrap');
+          gsap.set(bg, { yPercent:100, zIndex:2+i, force3D:true, willChange:'transform' });
+          gsap.to(bg, {
+            yPercent: 0, ease: 'none',
+            scrollTrigger: { trigger:wrap, start:'top bottom', end:'top top', scrub:true },
+          });
         });
       });
 
@@ -381,15 +432,8 @@ const HomePage = () => {
                   transition={{ type:'spring', damping:22, stiffness:90, delay:0.3 }}
                   style={{ display:'flex', justifyContent:'center' }}
                 >
-                  <div className="phone-float" style={{ position:'relative', padding:'30px 50px 30px 40px' }}>
-                    <PhoneMockup messages={[
-                      { type:'user', text:'Order jollof rice for me 🍛' },
-                      { type:'bot',  text:"Mama Abena's — GHS 30 each. How many?" },
-                      { type:'user', text:'2 please!' },
-                      { type:'bot',  text:'✅ Total GHS 60. Pay now?' },
-                      { type:'user', text:'Yes pay now!' },
-                      { type:'bot',  text:'💰 Done! Ready in ~20 mins.' },
-                    ]} />
+                  <div className="phone-float hero-phone-pad" style={{ position:'relative' }}>
+                    <PhoneMockup messages={heroMessages} />
                     {/* Floating order badge */}
                     <div style={{ position:'absolute', top:'10px', right:'-10px', background:'#fff', borderRadius:'50px', padding:'8px 14px', display:'flex', alignItems:'center', gap:'8px', boxShadow:'0 8px 28px rgba(249,115,22,0.15)', whiteSpace:'nowrap', zIndex:10, animation:'phoneFloat 3.5s ease-in-out infinite' }}>
                       <div style={{ width:'28px', height:'28px', borderRadius:'50%', background:'linear-gradient(135deg,#F97316,#EA580C)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px' }}>🛒</div>
@@ -426,14 +470,7 @@ const HomePage = () => {
               <div className="two-col">
                 <div className="col-phone phone-wrap">
                   <div className="phone-float" style={{ position:'relative' }}>
-                    <PhoneMockup accent="#F97316" messages={[
-                      { type: 'photoCard', image: food1, title: 'Spicy Jollof Rice', price: 'GHS 45' },
-                      { type: 'photoCard', image: food2, title: 'Grilled Tilapia', price: 'GHS 60' },
-                      { type: 'click_action', itemIndex: 1 },
-                      { type: 'bot',  text: 'Total GHS 60. Confirm?' },
-                      { type: 'user', text: 'Yes, confirm!' },
-                      { type: 'bot',  text: '💰 Order placed! Ready in 20m.' },
-                    ]} />
+                    <PhoneMockup accent="#F97316" messages={foodMessages} />
                     <div className="float-chip float-chip--orange" style={{ top:'12px', right:'-28px' }}>GH₵ 60.00 paid ✓</div>
                   </div>
                 </div>
@@ -470,14 +507,7 @@ Text Brosa on WhatsApp and get your favorite food — fast, simple, no app neede
                 </div>
                 <div className="phone-wrap">
                   <div className="phone-float--alt" style={{ position:'relative' }}>
-                    <PhoneMockup accent="#FB923C" messages={[
-                      { type: 'user', text: 'Book VIP Jeoun bus to Kumasi 🚌' },
-                      { type: 'photoCard', image: busBookingGuy, title: 'VIP Jeoun (Accra to Kumasi)', price: 'GHS 150', clicked: false },
-                      { type: 'click_action', itemIndex: 1 },
-                      { type: 'bot',  text: 'Confirm & Pay' },
-                      { type: 'user', text: 'GHS 150 Paid' },
-                      { type: 'bot',  text: 'Have a happy journey' },
-                    ]} />
+                    <PhoneMockup accent="#FB923C" messages={busMessages} />
                     <div className="float-chip float-chip--orange" style={{ top:'12px', left:'-28px' }}>🚌 Next Bus: 2:00 PM</div>
                   </div>
                 </div>
@@ -506,12 +536,7 @@ Text Brosa on WhatsApp and get your favorite food — fast, simple, no app neede
                 </div>
                 <div className="phone-wrap">
                   <div className="phone-float--alt" style={{ position:'relative', animationDuration:'4.2s' }}>
-                    <PhoneMockup accent="#F97316" messages={[
-                      { type:'user', text:'Book VIP Jeoun bus to Kumasi 🚌' },
-                      { type:'bot',  text:'🎟️ VIP Jeoun (Accra to Kumasi). 2:00 PM available. 1 Seat?' },
-                      { type:'user', text:'Yes, and 2 Silverbird movie tickets for tonight 🍿' },
-                      { type:'bot',  text:'✅ Bus & Movie tickets secured! Pay GHS 350 to confirm.' },
-                    ]} />
+                    <PhoneMockup accent="#F97316" messages={multiMessages} />
                     <div className="float-chip float-chip--orange" style={{ top:'12px', left:'-28px' }}>🚌 VIP Jeoun</div>
                     <div className="float-chip float-chip--dark" style={{ bottom:'18px', right:'-28px' }}>🍿 Silverbird</div>
                   </div>
@@ -542,11 +567,7 @@ Text Brosa on WhatsApp and get your favorite food — fast, simple, no app neede
                 </div>
                 <div className="phone-wrap">
                   <div className="phone-float--alt" style={{ position:'relative' }}>
-                    <PhoneMockup accent="#FB923C" messages={[
-                      { type:'bot',  text:'📊 Today: 47 orders · GHS 2,340' },
-                      { type:'user', text:'Show top items' },
-                      { type:'bot',  text:'🥇 Jollof Rice — 18 sold' },
-                    ]} />
+                    <PhoneMockup accent="#FB923C" messages={analyticsMessages} />
                     <div className="float-chip float-chip--orange" style={{ top:'12px', left:'-28px' }}>↑ +23% today</div>
                   </div>
                 </div>
@@ -568,12 +589,7 @@ Text Brosa on WhatsApp and get your favorite food — fast, simple, no app neede
               <div className="two-col">
                 <div className="col-phone phone-wrap">
                   <div className="phone-float" style={{ position:'relative' }}>
-                    <PhoneMockup accent="#F59E0B" messages={[
-                      { type: 'bot',  text: 'Select Payment Method:\n1. 🟡 MTN MoMo\n2. 🔴 Vodafone Cash\n3. 🔵 AirtelTigo Money\n4. 💳 Visa / Master Card' },
-                      { type: 'user', text: '4. Visa Card' },
-                      { type: 'bot',  text: 'Processing Visa payment for GHS 150...' },
-                      { type: 'bot',  text: '✅ Payment Successful! Receipt: #BR782' },
-                    ]} />
+                    <PhoneMockup accent="#F59E0B" messages={paymentMessages} />
                     <div className="float-chip float-chip--orange" style={{ top:'25px', right:'-32px' }}>🔒 Encrypted Payment</div>
                     <div className="float-chip float-chip--dark" style={{ bottom:'60px', left:'-28px' }}>🇬🇭 All Networks</div>
                   </div>
