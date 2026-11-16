@@ -1,344 +1,673 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import {
+  MessageSquare,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Camera,
+  Zap,
+  TrendingUp,
+  Lock,
+  ChevronLeft,
+  Video,
+  Phone,
+  MoreVertical,
+  Smile,
+  Paperclip,
+  Send,
+  CheckCheck
+} from 'lucide-react';
+import BrosaShort from '../images/brosa-short.png';
+import { WHATSAPP_LINK } from '../utils/constants';
+import ThreeDCard from './ThreeDCard';
+import { FloatingDollarCoin, FloatingLightningZap, LiveTransactionTicker } from './FloatingThreeDObjects';
 
-/* ─────────────────────────────────────────────────────────────
-   Animated phone mockup showing live WhatsApp chat
-───────────────────────────────────────────────────────────── */
-const MESSAGES = [
-  { type: 'user', text: 'Order jollof rice for me 🍛' },
-  { type: 'bot',  text: "Sure! Found at Mama Abena's — GHS 30 each. How many?" },
-  { type: 'user', text: '2 plates please!' },
-  { type: 'bot',  text: '✅ Confirmed! Total: GHS 60. Pay now?' },
-  { type: 'user', text: 'Yes, pay now!' },
-  { type: 'bot',  text: '💰 Payment received! Ready in ~20 mins.' },
+const SIMULATED_CONVERSATIONS = [
+  {
+    type: 'p2p',
+    pillLabel: '💸 Send ₵150',
+    title: 'Instant P2P Transfer',
+    steps: [
+      { sender: 'user', text: 'Send ₵150 to 0553277031 Sam for lunch', time: '10:14 AM' },
+      {
+        sender: 'brosa',
+        text: 'Got it! Transferring *₵150.00* to *Sam Israel*.\n\nFee: *₵0.00* · Free P2P\nReply *YES* with your 4-digit PIN to confirm.',
+        time: '10:14 AM'
+      },
+      { sender: 'user', text: 'YES 2489', time: '10:15 AM' },
+      {
+        sender: 'brosa',
+        isReceipt: true,
+        receiptData: {
+          title: 'Payment Sent! 🎉',
+          amount: '₵150.00',
+          recipient: 'Sam Israel (055•••7031)',
+          ref: 'Lunch · #BRO-883921',
+          time: 'Just now',
+          status: 'Instant Transfer Verified'
+        },
+        time: '10:15 AM'
+      }
+    ]
+  },
+  {
+    type: 'bank',
+    pillLabel: '🏦 Send ₦2k to Bank',
+    title: 'Direct Bank Settlement',
+    steps: [
+      { sender: 'user', text: 'Pay ₦2,000 to 14410003123 Access Bank', time: '11:02 AM' },
+      {
+        sender: 'brosa',
+        text: 'Sending *₦2,000.00* to account *144••••715* at *Access Bank*.\nAccount Name: *Oluwaseyi Adewale*\n\nReply *YES* to authorize transfer.',
+        time: '11:02 AM'
+      },
+      { sender: 'user', text: 'YES', time: '11:02 AM' },
+      {
+        sender: 'brosa',
+        isReceipt: true,
+        receiptData: {
+          title: 'Bank Transfer Settled! 🏦',
+          amount: '₦2,000.00',
+          recipient: 'Oluwaseyi Adewale · Access bank',
+          ref: 'Direct Interbank Clearing',
+          time: 'Just now',
+          status: 'Instant Pay Credited'
+        },
+        time: '11:03 AM'
+      }
+    ]
+  },
+  {
+    type: 'snap',
+    pillLabel: '📷 Snap Handwritten Bill',
+    title: 'Snap & Pay (AI Receipt OCR)',
+    steps: [
+      {
+        sender: 'user',
+        isImage: true,
+        imageCaption: '📷 [Handwritten Invoice: Account 9040013948008]',
+        time: '01:45 PM'
+      },
+      {
+        sender: 'brosa',
+        text: '⚡ *AI Account Vision Detected!*\n\nBank: *Stanbic Bank*\nAccount: *904••••008*\nName: *Nana Ama Mensah*\n\nHow much would you like to transfer?',
+        time: '01:45 PM'
+      },
+      { sender: 'user', text: '500 dollars', time: '01:46 PM' },
+      {
+        sender: 'brosa',
+        isReceipt: true,
+        receiptData: {
+          title: 'Transferred $500.00 ✅',
+          recipient: 'Nana Ama Mensah · Stanbic Bank',
+          ref: 'OCR Auto-Pay · #BRO-391024',
+          time: 'Just now',
+          status: 'Direct Bank Settlement'
+        },
+        time: '01:46 PM'
+      }
+    ]
+  }
 ];
 
-const PhoneMockup = () => {
-  const [visible, setVisible] = useState([]);
+const HeroSection = () => {
+  const [activeConvIdx, setActiveConvIdx] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+
+  // Typewriter rotating headlines: Move money smarter / Payment made simple / Instant Settlements
+  const TYPING_PHRASES = [
+    'Move Money Smarter.',
+    'Payment Made Simple.',
+    'Instant Settlements.',
+  ];
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [typedText, setTypedText] = useState('Move money smarter.');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    let idx = 0;
+    const targetPhrase = TYPING_PHRASES[phraseIdx];
     let timer;
 
-    const next = () => {
-      if (idx < MESSAGES.length) {
-        const newItem = MESSAGES[idx];
-        if (newItem) {
-          setVisible(prev => [...prev, newItem]);
-        }
-        idx++;
-        timer = setTimeout(next, 900);
+    if (!isDeleting) {
+      if (typedText.length < targetPhrase.length) {
+        timer = setTimeout(() => {
+          setTypedText(targetPhrase.slice(0, typedText.length + 1));
+        }, 75);
       } else {
-        // Restart after pause
-        timer = setTimeout(() => { idx = 0; setVisible([]); next(); }, 2500);
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2200);
       }
-    };
+    } else {
+      if (typedText.length > 0) {
+        timer = setTimeout(() => {
+          setTypedText(targetPhrase.slice(0, typedText.length - 1));
+        }, 38);
+      } else {
+        timer = setTimeout(() => {
+          setIsDeleting(false);
+          setPhraseIdx((prev) => (prev + 1) % TYPING_PHRASES.length);
+        }, 260);
+      }
+    }
 
-    timer = setTimeout(next, 600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [typedText, isDeleting, phraseIdx]);
+
+  // Phone 3D interactive physics tilt
+  const phoneX = useMotionValue(0);
+  const phoneY = useMotionValue(0);
+  const phoneSpring = { stiffness: 240, damping: 25 };
+  const phoneRotateX = useSpring(useTransform(phoneY, [-0.5, 0.5], [7, -7]), phoneSpring);
+  const phoneRotateY = useSpring(useTransform(phoneX, [-0.5, 0.5], [-7, 7]), phoneSpring);
+
+  const handlePhoneMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    phoneX.set((e.clientX - rect.left) / rect.width - 0.5);
+    phoneY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handlePhoneMouseLeave = () => {
+    phoneX.set(0);
+    phoneY.set(0);
+  };
+
+  const chatScrollRef = useRef(null);
+
+  // Auto-scroll chat smoothly to bottom when new steps appear without showing scrollbars
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTo({
+        top: chatScrollRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [activeStep, activeConvIdx]);
+
+  // Auto-play steps and seamlessly loop continuously
+  useEffect(() => {
+    setActiveStep(0);
+    const conv = SIMULATED_CONVERSATIONS[activeConvIdx];
+    const timers = [];
+
+    conv.steps.forEach((_, idx) => {
+      const timer = setTimeout(() => {
+        setActiveStep(idx + 1);
+      }, (idx + 1) * 1500);
+      timers.push(timer);
+    });
+
+    // Automatically loop to next conversation
+    const cycleTimer = setTimeout(() => {
+      setActiveConvIdx((prev) => (prev + 1) % SIMULATED_CONVERSATIONS.length);
+    }, (conv.steps.length + 1) * 1500 + 3500);
+    timers.push(cycleTimer);
+
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [activeConvIdx]);
+
+  const currentConv = SIMULATED_CONVERSATIONS[activeConvIdx];
+
+  const selectConversation = (idx) => {
+    setActiveConvIdx(idx);
+    setActiveStep(0);
+  };
 
   return (
-    <div style={{
-      width: '290px',
-      borderRadius: '40px',
-      background: 'linear-gradient(160deg, #1c1c1e, #2c2c2e)',
-      padding: '10px',
-      boxShadow: '0 50px 100px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.07), inset 0 0 0 1px rgba(255,255,255,0.04)',
-      position: 'relative',
-      flexShrink: 0,
-    }}>
-      {/* Screen */}
-      <div style={{
-        borderRadius: '32px',
-        background: '#ECE5DD',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '530px',
-      }}>
-        {/* Status bar */}
-        <div style={{ padding: '10px 18px 4px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: '700', color: '#000' }}>
-          <span>9:41</span>
-          <span style={{ letterSpacing: '-1px' }}>●●●</span>
-        </div>
+    <section className="relative pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-24 overflow-hidden bg-[#F8FAFC]">
 
-        {/* WA Header */}
-        <div style={{ background: '#fff', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '10px', borderBottom: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-          <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'linear-gradient(135deg, #14B8A6, #0EA5E9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '800', fontSize: '14px', flexShrink: 0 }}>B</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#000', lineHeight: 1.2 }}>Brosa</div>
-            <div style={{ fontSize: '10px', color: '#25D366', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#25D366', display: 'inline-block' }} />
-              online
-            </div>
-          </div>
-          <span style={{ fontSize: '15px' }}>📞</span>
-        </div>
+      {/* Dynamic ambient luxury glows with #320472 royal purple */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-[#320472]/20 via-[#4C1D95]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-28 -left-24 w-96 h-96 bg-gradient-to-br from-[#320472]/30 via-purple-900/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-36 -right-24 w-96 h-96 bg-gradient-to-bl from-[#EA580C]/25 via-[#320472]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-        {/* Chat */}
-        <div style={{ flex: 1, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '6px', minHeight: '380px' }}>
-          {visible.map((msg, i) => {
-            if (!msg) return null;
-            return (
-              <motion.div
-                key={`${i}-${msg.text}`}
-                initial={{ opacity: 0, y: 12, scale: 0.94 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', damping: 18, stiffness: 180 }}
-                style={{
-                  alignSelf: msg.type === 'user' ? 'flex-end' : 'flex-start',
-                  maxWidth: '82%',
-                  background: msg.type === 'user' ? 'linear-gradient(135deg, #25D366, #128C7E)' : '#fff',
-                  color: msg.type === 'user' ? '#fff' : '#1a1a1a',
-                  padding: '7px 11px',
-                  borderRadius: msg.type === 'user' ? '14px 14px 3px 14px' : '14px 14px 14px 3px',
-                  fontSize: '11px',
-                  lineHeight: '1.45',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-                }}
-              >
-                {msg.text}
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Input */}
-        <div style={{ background: '#f0f0f0', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ flex: 1, background: '#fff', borderRadius: '20px', padding: '7px 14px', fontSize: '11px', color: '#bbb' }}>Message…</div>
-          <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'linear-gradient(135deg, #14B8A6, #0EA5E9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', flexShrink: 0 }}>🎤</div>
-        </div>
+      {/* Floating 3D Elements positioned around hero */}
+      <div className="hidden xl:block absolute top-36 left-12 z-20 pointer-events-none">
+        <FloatingDollarCoin />
       </div>
 
-      {/* Floating notification bubble */}
-      <motion.div
-        animate={{ y: [0, -7, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute', top: '-18px', right: '-28px',
-          background: '#fff', borderRadius: '50px',
-          padding: '10px 14px',
-          display: 'flex', alignItems: 'center', gap: '9px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-          whiteSpace: 'nowrap', zIndex: 10,
-        }}
-      >
-        <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'linear-gradient(135deg, #14B8A6, #0EA5E9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', flexShrink: 0 }}>🛒</div>
-        <div>
-          <div style={{ fontWeight: '700', fontSize: '12px', color: '#0f1117' }}>Order placed!</div>
-          <div style={{ fontSize: '10px', color: '#9ca3af' }}>Mama Abena's Kitchen</div>
-        </div>
-      </motion.div>
+      <div className="hidden xl:block absolute top-72 right-12 z-20 pointer-events-none">
+        <FloatingLightningZap />
+      </div>
 
-      {/* Floating stats card */}
-      <motion.div
-        animate={{ y: [0, 9, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
-        style={{
-          position: 'absolute', bottom: '60px', left: '-44px',
-          background: '#fff', borderRadius: '16px',
-          padding: '12px 16px',
-          boxShadow: '0 8px 28px rgba(0,0,0,0.1)',
-          zIndex: 10, minWidth: '120px',
-        }}
-      >
-        <div style={{ fontSize: '10px', color: '#9ca3af', marginBottom: '4px', fontWeight: '500' }}>Today's Orders</div>
-        <div style={{ fontSize: '22px', fontWeight: '800', color: '#14B8A6', lineHeight: 1 }}>47</div>
-        <div style={{ fontSize: '10px', color: '#10b981', fontWeight: '700', marginTop: '4px' }}>↑ +12% today</div>
-      </motion.div>
-    </div>
-  );
-};
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-/* ─────────────────────────────────────────────────────────────
-   Hero Section
-───────────────────────────────────────────────────────────── */
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show:   { opacity: 1, y: 0, transition: { type: 'spring', damping: 22, stiffness: 130 } },
-};
-
-const HeroSection = () => (
-  <section
-    id="hero"
-    style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      background: 'linear-gradient(150deg, #f0fdf9 0%, #f8faff 55%, #eff6ff 100%)',
-      paddingTop: '72px',
-      position: 'relative',
-      overflow: 'hidden',
-    }}
-  >
-    {/* Background glows */}
-    <div style={{ position: 'absolute', top: '8%', right: '3%', width: '480px', height: '480px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(20,184,166,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
-    <div style={{ position: 'absolute', bottom: '5%', left: '2%', width: '360px', height: '360px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px 24px', width: '100%' }}>
-      <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '72px', alignItems: 'center' }}>
-
-        {/* Left — copy */}
+        {/* Top Centered Pill Badge with #320472 Classic Vibe */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex justify-center mb-5"
         >
-          <motion.div variants={fadeUp}>
-            <span style={{
-              display: 'inline-block',
-              background: 'linear-gradient(135deg, rgba(20,184,166,0.12), rgba(14,165,233,0.12))',
-              border: '1px solid rgba(20,184,166,0.25)',
-              borderRadius: '50px',
-              padding: '6px 14px',
-              fontSize: '12px',
-              fontWeight: '600',
-              color: '#14B8A6',
-              letterSpacing: '0.05em',
-              marginBottom: '20px',
-            }}>
-              🚀 Now available across Ghana
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white border border-[#320472]/25 shadow-sm shadow-[#320472]/10 hover:border-[#320472]/50 transition-colors">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#320472] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#320472]" />
             </span>
-          </motion.div>
+            <span className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
+              Conversational Banking Live on WhatsApp
+            </span>
+            <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded-full bg-[#320472] text-white shadow-sm">
+              2.0
+            </span>
+          </div>
+        </motion.div>
 
+        {/* Main Hero Header with Live Typing Animation */}
+        <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
           <motion.h1
-            variants={fadeUp}
-            style={{
-              fontSize: 'clamp(36px, 5.5vw, 68px)',
-              fontWeight: '800',
-              lineHeight: '1.08',
-              color: '#0f1117',
-              letterSpacing: '-1.5px',
-              marginBottom: '22px',
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 leading-[1.08]"
           >
-            Your AI WhatsApp<br />
-            <span style={{ color: '#14B8A6' }}>Shopping Assistant,</span><br />
-            Anytime.
+            <span className="inline-block relative">
+              <span className="text-slate-900">{typedText || '\u00A0'}</span>
+              <span
+                className="inline-block w-[3px] sm:w-[4px] md:w-[5px] h-[0.88em] bg-gradient-to-b from-[#320472] to-[#EA580C] ml-1 sm:ml-1.5 align-baseline rounded-full animate-pulse shadow-sm shadow-[#EA580C]/40"
+                aria-hidden="true"
+              />
+            </span>
+            <span className="text-gradient-purple-orange block mt-1">
+              Across Wallets & Banks in One Chat.
+            </span>
           </motion.h1>
 
           <motion.p
-            variants={fadeUp}
-            style={{
-              fontSize: '17px',
-              color: '#64748b',
-              lineHeight: '1.72',
-              marginBottom: '40px',
-              maxWidth: '460px',
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-5 text-base sm:text-lg lg:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed font-normal"
           >
-            Brosa lets businesses sell and customers order, pay, and track — all through a single WhatsApp conversation. No app download needed.
+            Talk to money. Brosa gets it done. Send P2P transfers, bank transfers, pay for goods & services, buy data & airtime, and pay bills — directly on <strong className="font-bold text-slate-900">WhatsApp</strong> with no app downloads.
           </motion.p>
 
-          <motion.div variants={fadeUp} style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <motion.a
-              href="https://wa.me/message/52KOT5KCITWJB1"
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4"
+          >
+            <a
+              href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.04, y: -2, boxShadow: '0 16px 40px rgba(15,17,23,0.3)' }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '8px',
-                backgroundColor: '#0f1117', color: '#fff',
-                padding: '14px 28px', borderRadius: '12px',
-                fontSize: '15px', fontWeight: '700',
-                textDecoration: 'none',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
-              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-base font-bold text-white bg-gradient-to-r from-[#320472] via-[#5B13B9] to-[#EA580C] shadow-lg shadow-[#320472]/35 hover:shadow-2xl hover:shadow-[#320472]/50 hover:scale-105 active:scale-100 transition-all duration-200 group border border-purple-400/20"
             >
-              <span style={{ fontSize: '18px' }}>💬</span>
-              Try Brosa Now
-            </motion.a>
+              <MessageSquare className="w-5 h-5 fill-white/20" />
+              <span>Start on WhatsApp</span>
+              <ArrowRight className="w-4 h-4 ml-0.5 group-hover:translate-x-1 transition-transform" />
+            </a>
 
-            <motion.button
+            <button
               onClick={() => {
-                const el = document.getElementById('features');
-                if (el) {
-                  const y = el.getBoundingClientRect().top + window.scrollY - 80;
-                  window.scrollTo({ top: y, behavior: 'smooth' });
-                }
+                const el = document.getElementById('how-it-works');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              whileHover={{ scale: 1.03, backgroundColor: 'rgba(20,184,166,0.08)' }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                background: 'transparent',
-                border: '1.5px solid rgba(20,184,166,0.3)',
-                color: '#14B8A6', padding: '14px 24px',
-                borderRadius: '12px', fontSize: '15px',
-                fontWeight: '600', cursor: 'pointer',
-                fontFamily: 'inherit',
-                transition: 'background-color 0.2s ease',
-              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base font-bold text-[#320472] bg-white hover:bg-purple-50/60 border border-[#320472]/25 shadow-sm hover:shadow hover:border-[#320472]/50 transition-all duration-200"
             >
-              See how it works ↓
-            </motion.button>
+              <Zap className="w-4 h-4 text-[#EA580C]" />
+              <span>See How It Works</span>
+            </button>
           </motion.div>
 
-          {/* Social proof */}
-          <motion.div
-            variants={fadeUp}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '36px' }}
-          >
-            <div style={{ display: 'flex' }}>
-              {['🧑🏿', '👩🏽', '👨🏾', '👩🏿', '🧑🏽'].map((em, i) => (
-                <div key={i} style={{
-                  width: '30px', height: '30px', borderRadius: '50%',
-                  border: '2px solid #fff',
-                  background: `linear-gradient(135deg, hsl(${i * 60},70%,60%), hsl(${i * 60 + 30},70%,50%))`,
-                  marginLeft: i > 0 ? '-8px' : 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '15px', flexShrink: 0,
-                }}>{em}</div>
-              ))}
-            </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#0f1117' }}>Loved by 500+ customers</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af' }}>⭐️⭐️⭐️⭐️⭐️ across Ghana</div>
-            </div>
-          </motion.div>
-        </motion.div>
+          {/* Live Micro-Transaction Activity Ticker */}
+          <div className="mt-6">
+            <LiveTransactionTicker />
+          </div>
 
-        {/* Right — phone */}
-        <motion.div
-          initial={{ opacity: 0, x: 50, scale: 0.9 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ type: 'spring', damping: 22, stiffness: 100, delay: 0.3 }}
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        >
+          {/* Social Proof & Trust Badges */}
           <motion.div
-            animate={{ y: [0, -14, 0] }}
-            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ padding: '30px 40px 30px 40px' }} // breathing room for float cards
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-5 flex flex-wrap items-center justify-center gap-5 sm:gap-6 text-xs sm:text-sm text-slate-600 font-medium"
           >
-            <PhoneMockup />
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#F59E0B] font-black text-sm">★★★★★</span>
+              <span className="font-bold text-slate-900">4.9/5 Rating</span>
+              <span className="text-slate-500">(2,500+ users)</span>
+            </div>
+            <div className="hidden sm:inline text-slate-300">•</div>
+            <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>$25M+ Transacted</span>
+            </div>
+            <div className="hidden sm:inline text-slate-300">•</div>
+            <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+              <Lock className="w-3.5 h-3.5 text-slate-600" />
+              <span>Bank-Grade Encryption</span>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
+
+        {/* Interactive "Try It Live" Prompt Bar */}
+        <div className="max-w-2xl mx-auto mb-6">
+          <div className="flex items-center justify-center mb-2 px-2 text-xs font-bold text-slate-500">
+            <span className="flex items-center gap-1 text-[#EA580C]">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Click to test interactive banking in WhatsApp:</span>
+            </span>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-2">
+            {SIMULATED_CONVERSATIONS.map((c, i) => (
+              <button
+                key={c.type}
+                onClick={() => selectConversation(i)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border ${activeConvIdx === i
+                  ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white border-transparent shadow-md shadow-orange-500/25 scale-105'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-orange-300 hover:bg-orange-50/40'
+                  }`}
+              >
+                {c.pillLabel}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dual Showcase: Interactive 3D Card + Phone Mockup */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
+
+          {/* Left Column: Interactive 3D Metal Card & Stats */}
+          <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
+
+            {/* Interactive 3D Card with tilt */}
+            <div className="relative">
+              <div className="text-center lg:text-left mb-2">
+                <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-[#EA580C] bg-orange-100/70 px-2.5 py-0.5 rounded-md">
+                  3D Interactive • Hover to Tilt
+                </span>
+              </div>
+              <ThreeDCard />
+            </div>
+
+            {/* Quick Benefits Chips */}
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-2.5">
+                <div className="w-7 h-7 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center flex-shrink-0 font-bold">
+                  ⚡
+                </div>
+                <div>
+                  <div className="font-bold text-slate-900">Instant Transfer</div>
+                  <div className="text-[11px] text-slate-500">Free P2P Payments</div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-2.5">
+                <div className="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+                  🏦
+                </div>
+                <div>
+                  <div className="font-bold text-slate-900">20+ Banks</div>
+                  <div className="text-[11px] text-slate-500">Direct Clearing</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Hyper-Realistic Flagship Smartphone */}
+          <div className="lg:col-span-7 order-1 lg:order-2 flex flex-col items-center justify-center">
+
+            {/* Outer Smartphone Frame with 3D Tilt Physics and Hardware Buttons */}
+            <motion.div
+              style={{
+                perspective: 1200,
+                rotateX: phoneRotateX,
+                rotateY: phoneRotateY,
+                transformStyle: 'preserve-3d',
+              }}
+              onMouseMove={handlePhoneMouseMove}
+              onMouseLeave={handlePhoneMouseLeave}
+              className="relative w-full max-w-[370px] sm:max-w-[385px] cursor-pointer group"
+            >
+
+              {/* Physical Left Hardware Buttons (Titanium Milled) */}
+              {/* Action Button */}
+              <div className="absolute -left-[3.5px] top-[95px] w-[3.5px] h-[26px] bg-gradient-to-r from-[#4E525D] to-[#25272D] rounded-l-[3px] shadow-sm z-0" />
+              {/* Volume Up */}
+              <div className="absolute -left-[3.5px] top-[138px] w-[3.5px] h-[50px] bg-gradient-to-r from-[#4E525D] to-[#25272D] rounded-l-[3px] shadow-sm z-0" />
+              {/* Volume Down */}
+              <div className="absolute -left-[3.5px] top-[200px] w-[3.5px] h-[50px] bg-gradient-to-r from-[#4E525D] to-[#25272D] rounded-l-[3px] shadow-sm z-0" />
+
+              {/* Physical Right Hardware Button (Power / Lock) */}
+              <div className="absolute -right-[3.5px] top-[155px] w-[3.5px] h-[75px] bg-gradient-to-l from-[#4E525D] to-[#25272D] rounded-r-[3px] shadow-sm z-0" />
+
+              {/* Titanium Chassis Outer Shell */}
+              <div className="phone-mockup-outer relative z-10">
+
+                {/* Subtle Antenna Bands */}
+                <div className="absolute -top-[1.5px] left-[70px] w-[3px] h-[2px] bg-[#1E2026] pointer-events-none" />
+                <div className="absolute -top-[1.5px] right-[70px] w-[3px] h-[2px] bg-[#1E2026] pointer-events-none" />
+                <div className="absolute -bottom-[1.5px] left-[70px] w-[3px] h-[2px] bg-[#1E2026] pointer-events-none" />
+                <div className="absolute -bottom-[1.5px] right-[70px] w-[3px] h-[2px] bg-[#1E2026] pointer-events-none" />
+
+                {/* OLED Display Container with 19.5:9 flagship aspect ratio */}
+                <div className="phone-mockup-inner flex flex-col h-[600px] sm:h-[650px] shadow-inner select-none">
+
+                  {/* Glass Specular Reflection Sheen */}
+                  <div className="pointer-events-none absolute inset-0 rounded-[44px] bg-gradient-to-tr from-transparent via-white/[0.015] to-white/[0.06] z-30" />
+
+                  {/* Micro Ear-Speaker Slit */}
+                  <div className="w-12 h-[3px] bg-[#111317] rounded-full mx-auto mt-1 opacity-90 z-30 pointer-events-none border border-white/5" />
+
+                  {/* Top Status Bar with Dynamic Island */}
+                  <div className="bg-[#1F2C34] pt-1.5 px-6 pb-1 flex items-center justify-between text-white text-[12px] font-semibold relative z-20">
+                    {/* Time */}
+                    <span className="font-semibold tracking-tight text-[11px] sm:text-xs">9:41</span>
+
+                    {/* Dynamic Island Pill */}
+                    <div className="w-24 sm:w-28 h-[22px] bg-black rounded-full flex items-center justify-between px-2.5 shadow-inner border border-white/5">
+                      {/* Sensor dot */}
+                      <div className="w-2 h-2 rounded-full bg-[#050608]" />
+                      {/* TrueDepth Front Camera Lens with anti-reflective coating glint */}
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#080B14] border border-[#141B2D] relative overflow-hidden flex items-center justify-center">
+                        <div className="w-1 h-1 rounded-full bg-gradient-to-tr from-blue-600/70 to-purple-600/40" />
+                        <div className="w-0.5 h-0.5 rounded-full bg-white/70 absolute top-0.5 right-0.5" />
+                      </div>
+                    </div>
+
+                    {/* Cellular, 5G & Battery */}
+                    <div className="flex items-center gap-1.5 text-white/90">
+                      {/* 4-bar cellular */}
+                      <svg className="w-3.5 h-2.5 fill-white" viewBox="0 0 17 12">
+                        <rect x="1" y="9" width="2.5" height="3" rx="0.5" />
+                        <rect x="5" y="6.5" width="2.5" height="5.5" rx="0.5" />
+                        <rect x="9" y="3.5" width="2.5" height="8.5" rx="0.5" />
+                        <rect x="13" y="0.5" width="2.5" height="11.5" rx="0.5" />
+                      </svg>
+                      {/* 5G */}
+                      <span className="text-[9px] font-black tracking-tight leading-none">5G</span>
+                      {/* Battery glyph */}
+                      <div className="flex items-center">
+                        <div className="w-[19px] h-[10px] border border-white/80 rounded-[3px] p-[1.5px] flex items-center">
+                          <div className="w-[85%] h-full bg-[#25D366] rounded-[1px]" />
+                        </div>
+                        <div className="w-[1.5px] h-[3.5px] bg-white/70 rounded-r-[1px]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp App Header Bar */}
+                  <div className="bg-[#1F2C34] text-white px-3 py-2 flex items-center justify-between border-b border-[#2A3942]/60 relative z-20">
+                    <div className="flex items-center gap-1.5">
+                      <ChevronLeft className="w-5 h-5 text-[#00A884] -mr-1 cursor-pointer flex-shrink-0" />
+
+                      {/* Brosa Official Avatar with Verified Checkmark */}
+                      <div className="relative flex-shrink-0 cursor-pointer">
+                        <div className="w-8 h-8 rounded-full overflow-hidden shadow-sm flex items-center justify-center">
+                          <img src={BrosaShort} alt="Brosa" className="w-full h-full object-cover rounded-full" />
+                        </div>
+                      </div>
+
+                      <div className="ml-1">
+                        <div className="flex items-center gap-1">
+                          <span className="font-bold text-[14px] text-[#E9EDEF] tracking-tight leading-tight">
+                            Brosa
+                          </span>
+                          <span className="w-3.5 h-3.5 rounded-full bg-[#00A884] flex items-center justify-center text-[9px] text-white font-black shadow-sm" title="Verified Business">
+                            ✓
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-[#00A884] font-medium flex items-center gap-1 leading-none mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00A884] animate-pulse" />
+                          <span>online</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* WhatsApp Action Icons */}
+                    <div className="flex items-center gap-3.5 text-[#AEC0CC] pr-1">
+                      <Video className="w-4 h-4 hover:text-white transition-colors cursor-pointer" />
+                      <Phone className="w-4 h-4 hover:text-white transition-colors cursor-pointer" />
+                      <MoreVertical className="w-4 h-4 hover:text-white transition-colors cursor-pointer" />
+                    </div>
+                  </div>
+
+                  {/* Chat Canvas with WhatsApp Dark Theme (Scrollbar Hidden & Auto-Scrolled) */}
+                  <div
+                    ref={chatScrollRef}
+                    className="flex-1 px-3 sm:px-3.5 py-2 overflow-y-auto no-scrollbar space-y-2 bg-[#0B141A] text-xs relative"
+                  >
+
+                    {/* Centered Date & Security Notice */}
+                    <div className="text-center my-0.5 space-y-1">
+                      <span className="inline-block bg-[#182229]/95 text-[#8696A0] text-[9.5px] font-semibold px-2 py-0.5 rounded-md shadow-sm border border-white/5 uppercase tracking-wide">
+                        TODAY
+                      </span>
+                      <div>
+                        <div className="inline-flex items-center gap-1.5 bg-[#182229]/80 text-[#FFD279] text-[9.5px] px-2.5 py-1 rounded-md border border-yellow-500/10 leading-tight max-w-[94%] mx-auto">
+                          <Lock className="w-2.5 h-2.5 text-[#FFD279] flex-shrink-0" />
+                          <span>Messages are end-to-end encrypted · 24/7 AI Banking</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Render conversation steps */}
+                    {currentConv.steps.slice(0, activeStep).map((step, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.22 }}
+                        className={step.sender === 'user' ? 'bubble-user' : 'bubble-brosa'}
+                      >
+                        {step.isImage && (
+                          <div className="mb-1.5 p-2 rounded-lg bg-black/40 border border-white/10 flex items-center gap-2 text-white">
+                            <Camera className="w-4 h-4 text-[#F97316]" />
+                            <span className="font-mono text-[10.5px]">{step.imageCaption}</span>
+                          </div>
+                        )}
+
+                        {step.isReceipt ? (
+                          <div className="bg-[#111B21] p-2.5 rounded-xl border border-emerald-500/40 text-white space-y-1.5">
+                            <div className="flex items-center justify-between border-b border-white/10 pb-1">
+                              <span className="font-bold text-emerald-400 text-xs">
+                                {step.receiptData.title}
+                              </span>
+                              <span className="text-[9.5px] text-slate-400">{step.receiptData.time}</span>
+                            </div>
+                            <div className="text-lg sm:text-xl font-black text-white">
+                              {step.receiptData.amount || 'Transferred'}
+                            </div>
+                            <div className="text-[11px] text-slate-300">
+                              To: <strong className="text-white">{step.receiptData.recipient}</strong>
+                            </div>
+                            <div className="text-[9.5px] text-slate-400">
+                              Ref: {step.receiptData.ref}
+                            </div>
+                            <div className="pt-0.5 flex items-center gap-1.5 text-[9.5px] text-emerald-400 font-bold">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>{step.receiptData.status}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="whitespace-pre-line text-[12px] leading-relaxed">{step.text}</p>
+                        )}
+
+                        <div className="text-[9px] text-right mt-0.5 opacity-70 flex items-center justify-end gap-1">
+                          <span>{step.time}</span>
+                          {step.sender === 'user' && (
+                            <CheckCheck className="w-3.5 h-3.5 text-[#53BDEB]" />
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {/* Animated Typing Indicator */}
+                    {activeStep > 0 && activeStep < currentConv.steps.length && currentConv.steps[activeStep].sender === 'brosa' && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="bubble-brosa py-1.5 px-3 inline-flex items-center gap-1.5"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00A884] animate-bounce" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00A884] animate-bounce [animation-delay:0.2s]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00A884] animate-bounce [animation-delay:0.4s]" />
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* WhatsApp Chat Input Bar (Fully Inset to Prevent Edge Clipping) */}
+                  <div className="px-3.5 sm:px-4 py-2 bg-[#1F2C34] flex items-center gap-2 border-t border-[#2A3942]/60 relative z-20">
+                    <Smile className="w-5 h-5 text-[#8696A0] hover:text-[#00A884] transition-colors cursor-pointer ml-0.5 flex-shrink-0" />
+                    <div className="flex-1 bg-[#2A3942] rounded-full h-8 sm:h-8.5 px-3 text-[#8696A0] text-[11px] sm:text-xs flex items-center justify-between min-w-0">
+                      <span className="truncate pr-1">Type a payment (e.g. Pay $2k...)</span>
+                      <div className="flex items-center gap-2 text-[#8696A0] flex-shrink-0">
+                        <Paperclip className="w-3.5 h-3.5 -rotate-45 hover:text-white cursor-pointer" />
+                        <Camera className="w-3.5 h-3.5 hover:text-white cursor-pointer" />
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full bg-[#00A884] flex items-center justify-center text-white shadow-md hover:bg-[#008f6f] active:scale-95 transition-all cursor-pointer flex-shrink-0">
+                      <Send className="w-3.5 h-3.5 ml-0.5 fill-white" />
+                    </div>
+                  </div>
+
+                  {/* iOS Home Indicator Bar */}
+                  <div className="bg-[#1F2C34] pb-2 pt-0.5 flex justify-center select-none relative z-20">
+                    <div className="w-28 sm:w-32 h-1 bg-white/40 rounded-full" />
+                  </div>
+
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Realistic Physical Contact Drop-Shadow Underneath */}
+            <div className="w-[78%] h-5 bg-black/45 blur-xl rounded-full -mt-1 pointer-events-none" />
+          </div>
+
+        </div>
+
+        {/* Feature Hashtag Pills Bar */}
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold text-slate-700">
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[#EA580C]">
+            #SendMoney
+          </span>
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            #BankTransfers
+          </span>
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            #AirtimeAndBundles
+          </span>
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            #SnapAndPay
+          </span>
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            #SmartSpending
+          </span>
+          <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-emerald-700">
+            #InstantLockSecurity
+          </span>
+        </div>
 
       </div>
-    </div>
-
-    <style>{`
-      @media (max-width: 900px) {
-        .hero-grid {
-          grid-template-columns: 1fr !important;
-          gap: 56px !important;
-          text-align: center;
-        }
-        .hero-grid > div:last-child { order: -1; }
-        .hero-grid p { margin-left: auto !important; margin-right: auto !important; }
-        .hero-grid > div:first-child > div:last-of-type { justify-content: center; }
-      }
-    `}</style>
-  </section>
-);
+    </section>
+  );
+};
 
 export default HeroSection;

@@ -18,7 +18,7 @@ import ScrollToTop from './components/ScrollToTop';
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div style={{ minHeight: '100vh', backgroundColor: '#fff', overflowX: 'hidden' }}>
+      <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC', color: '#0F172A', overflowX: 'hidden' }}>
         <Navigation />
         <ScrollToTop />
         <main>

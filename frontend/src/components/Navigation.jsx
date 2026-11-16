@@ -1,311 +1,160 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MessageSquare, ArrowRight, Menu, X, ChevronRight } from 'lucide-react';
+import BrosaLogoWhite from '../images/brosa-logo-white.png';
 import logo from '../images/brosa-logo.png';
-
-const NAV_HEIGHT = 72;
+import { WHATSAPP_LINK } from '../utils/constants';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Track scroll for sticky nav style
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
-  // Close mobile menu on resize to desktop
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) setIsMobileMenuOpen(false);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Lock body scroll when mobile menu open
-  useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isMobileMenuOpen]);
-
-  const navItems = [
-    { id: 'solutions', label: 'Solutions' },
-    { id: 'features', label: 'Features' },
-    { id: 'payments', label: 'Payments' },
-    { id: 'faq', label: 'FAQ' },
+  const navLinks = [
+    { label: 'Product', id: 'product' },
+    { label: 'Features', id: 'features' },
+    { label: 'How It Works', id: 'how-it-works' },
+    { label: 'Use Cases', id: 'use-cases' },
+    { label: 'Security', id: 'security' },
+    { label: 'FAQ', id: 'faq' },
   ];
 
-  // Smooth scroll with correct offset for nav height
-  const scrollToSection = useCallback((id) => {
+  const scrollToSection = (id) => {
     setIsMobileMenuOpen(false);
-    
     if (location.pathname !== '/') {
-      // If not on home page, navigate to home and pass the target id
       navigate('/', { state: { scrollTo: id } });
       return;
     }
-
     const el = document.getElementById(id);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT - 8;
-    window.scrollTo({ top: y, behavior: 'smooth' });
-  }, [location.pathname, navigate]);
+    if (el) {
+      const navOffset = 80;
+      const y = el.getBoundingClientRect().top + window.scrollY - navOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  const handleLogoClick = (e) => {
+    if (e) e.preventDefault();
+    setIsMobileMenuOpen(false);
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollToTop: true } });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 120 }}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          height: `${NAV_HEIGHT}px`,
-          backgroundColor: isScrolled ? 'rgba(255,251,245,0.96)' : 'rgba(255,255,255,0)',
-          backdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
-          borderBottom: isScrolled ? '1px solid rgba(234,88,12,0.08)' : '1px solid transparent',
-          boxShadow: isScrolled ? '0 4px 24px rgba(249,115,22,0.07)' : 'none',
-          transition: 'background-color 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
-        }}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+            ? 'py-3 bg-white/95 backdrop-blur-xl border-b border-[#320472]/15 shadow-sm shadow-[#320472]/5'
+            : 'py-5 bg-transparent'
+          }`}
       >
-        <div style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0 24px',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
 
-          {/* Logo */}
-          <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-            <motion.img
-              src={logo}
-              alt="Brosa AI"
-              whileHover={{ scale: 1.04 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              style={{ height: '72px', width: 'auto', display: 'block' }}
-            />
-          </RouterLink>
-
-          {/* Desktop Nav Links — centered */}
-          <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#374151',
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  fontFamily: 'inherit',
-                  letterSpacing: '-0.01em',
-                  transition: 'color 0.2s ease, background-color 0.2s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.color = '#EA580C';
-                  e.currentTarget.style.backgroundColor = 'rgba(249,115,22,0.07)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.color = '#374151';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Right side: CTA + Mobile Burger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <motion.a
-              href="https://wa.me/message/52KOT5KCITWJB1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="desktop-cta"
-              whileHover={{ scale: 1.04, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                background: 'linear-gradient(135deg, #F97316, #EA580C)',
-                color: '#fff',
-                padding: '9px 20px',
-                borderRadius: '10px',
-                fontSize: '14px',
-                fontWeight: '600',
-                textDecoration: 'none',
-                letterSpacing: '-0.01em',
-                boxShadow: '0 4px 16px rgba(249,115,22,0.30)',
-              }}
-            >
-              Try it Out
-            </motion.a>
-
-            {/* Hamburger */}
+            {/* Brand Logo in Classic Royal Purple Badge (Scrolls to top of page) */}
             <button
-              onClick={() => setIsMobileMenuOpen(prev => !prev)}
-              className="mobile-burger"
-              aria-label="Toggle navigation"
-              aria-expanded={isMobileMenuOpen}
-              style={{
-                display: 'none',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                width: '40px',
-                height: '40px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: '5px',
-                borderRadius: '8px',
-              }}
+              onClick={handleLogoClick}
+              className="flex items-center group py-1 text-left cursor-pointer focus:outline-none"
+              aria-label="Brosa Home - Scroll to top"
             >
-              <span style={{
-                display: 'block', width: '20px', height: '2px',
-                backgroundColor: '#1a1a1a', borderRadius: '2px',
-                transition: 'transform 0.3s ease, opacity 0.3s ease',
-                transform: isMobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
-              }} />
-              <span style={{
-                display: 'block', width: '20px', height: '2px',
-                backgroundColor: '#1a1a1a', borderRadius: '2px',
-                transition: 'opacity 0.3s ease',
-                opacity: isMobileMenuOpen ? 0 : 1,
-              }} />
-              <span style={{
-                display: 'block', width: '20px', height: '2px',
-                backgroundColor: '#1a1a1a', borderRadius: '2px',
-                transition: 'transform 0.3s ease',
-                transform: isMobileMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none',
-              }} />
+              <div className="flex items-center px-3.5 py-1.5 rounded-2xl bg-[#320472] shadow-md shadow-[#320472]/35 border border-[#320472]/60 hover:shadow-lg hover:shadow-[#320472]/50 hover:scale-[1.03] transition-all duration-200">
+                <img
+                  src={BrosaLogoWhite}
+                  alt="Brosa"
+                  className="h-6 sm:h-7 md:h-8 w-auto object-contain transition-transform duration-200"
+                />
+              </div>
+            </button>
+
+            {/* Floating Navigation Pill */}
+            <nav className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/95 border border-slate-200/90 shadow-sm shadow-[#320472]/5 backdrop-blur-md">
+              {navLinks.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => scrollToSection(item.id)}
+                  className="px-3.5 py-1.5 text-xs lg:text-sm font-semibold text-slate-700 hover:text-[#320472] hover:bg-purple-50/80 rounded-full transition-all duration-150"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Right Action Button with Purple-to-Orange Royalty Gradient */}
+            <div className="hidden md:flex items-center gap-3">
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#320472] via-[#6D28D9] to-[#EA580C] shadow-lg shadow-[#320472]/30 hover:shadow-xl hover:shadow-[#320472]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group border border-purple-300/20"
+              >
+                <MessageSquare className="w-4 h-4 fill-white/20" />
+                <span>Start on WhatsApp</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-800 bg-white/80 border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
-      </motion.nav>
+      </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              style={{
-                position: 'fixed',
-                inset: 0,
-                backgroundColor: 'rgba(0,0,0,0.3)',
-                zIndex: 998,
-              }}
-            />
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-0 top-[72px] z-40 bg-white/98 backdrop-blur-2xl border-b border-slate-200 p-6 shadow-2xl md:hidden"
+          >
+            <div className="flex flex-col gap-2">
+              {navLinks.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => scrollToSection(item.id)}
+                  className="flex items-center justify-between py-3 px-4 rounded-xl text-left text-sm font-bold text-slate-800 hover:bg-orange-50 hover:text-[#EA580C] transition-colors"
+                >
+                  <span>{item.label}</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+              ))}
 
-            {/* Drawer */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ type: 'spring', damping: 24, stiffness: 200 }}
-              style={{
-                position: 'fixed',
-                top: `${NAV_HEIGHT}px`,
-                left: 0,
-                right: 0,
-                zIndex: 999,
-                backgroundColor: '#fff',
-                borderBottom: '1px solid rgba(0,0,0,0.08)',
-                boxShadow: '0 16px 48px rgba(0,0,0,0.12)',
-                padding: '16px 24px 24px',
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
-                {navItems.map((item, i) => (
-                  <motion.button
-                    key={item.id}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05, type: 'spring', damping: 20 }}
-                    onClick={() => scrollToSection(item.id)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '17px',
-                      fontWeight: '500',
-                      color: '#1a1a1a',
-                      padding: '14px 12px',
-                      textAlign: 'left',
-                      fontFamily: 'inherit',
-                      borderRadius: '10px',
-                      transition: 'background-color 0.15s ease',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(249,115,22,0.06)'}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                  >
-                    {item.label}
-                  </motion.button>
-                ))}
+              <div className="pt-4 border-t border-slate-100 mt-2">
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-[#F97316] to-[#EA580C] shadow-lg shadow-orange-500/30"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Start on WhatsApp (+233 59 811 1199)</span>
+                </a>
               </div>
-              <motion.a
-                href="https://wa.me/message/52KOT5KCITWJB1"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, type: 'spring', damping: 20 }}
-                style={{
-                  display: 'block',
-                  background: 'linear-gradient(135deg, #F97316, #EA580C)',
-                  color: '#fff',
-                  padding: '15px 24px',
-                  borderRadius: '12px',
-                  fontSize: '15px',
-                  fontWeight: '600',
-                  textDecoration: 'none',
-                  textAlign: 'center',
-                  boxShadow: '0 6px 20px rgba(249,115,22,0.32)',
-                }}
-              >
-                Try it Out
-              </motion.a>
-            </motion.div>
-          </>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .desktop-cta { display: none !important; }
-          .mobile-burger { display: flex !important; }
-        }
-      `}</style>
     </>
   );
 };

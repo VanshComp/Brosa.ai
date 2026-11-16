@@ -1,129 +1,56 @@
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  show:   { opacity: 1, y: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } },
-};
-const stagger = {
-  hidden: {},
-  show:   { transition: { staggerChildren: 0.12 } },
-};
-
-const CARDS = [
-  {
-    icon: '🔐',
-    title: 'Secure Payments',
-    desc: 'Every transaction through Brosa is protected end-to-end. Customers transact with total confidence, vendors receive funds safely and instantly.',
-    color: '#14B8A6',
-  },
-  {
-    icon: '🛡️',
-    title: 'WhatsApp Native Privacy',
-    desc: "Brosa runs entirely inside WhatsApp's encrypted infrastructure, so you benefit from world-class security standards without any extra setup.",
-    color: '#0EA5E9',
-  },
-  {
-    icon: '📱',
-    title: 'Verified Business Account',
-    desc: 'Your Brosa storefront is tied to a verified WhatsApp Business number. Only you control your orders — no unauthorized access, ever.',
-    color: '#8B5CF6',
-  },
-];
+import React from 'react';
+import { motion } from 'framer-motion';
+import { TrendingUp, Zap, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { METRICS } from '../utils/constants';
 
 const StatsSection = () => {
-  const ref    = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px 0px' });
-
   return (
-    <section
-      ref={ref}
-      id="security"
-      className="stacked-section"
-      style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0fdf9 100%)', zIndex: 14 }}
-    >
-      <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
+    <section className="py-20 sm:py-28 bg-[#0B0F19] text-white relative overflow-hidden">
+      {/* Background glow orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#EA580C]/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Heading */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          style={{ textAlign: 'center', marginBottom: '70px' }}
-        >
-          <motion.span
-            variants={fadeUp}
-            style={{
-              display: 'inline-block',
-              fontSize: '11px', fontWeight: '700',
-              letterSpacing: '0.12em', color: '#14B8A6',
-              textTransform: 'uppercase', marginBottom: '14px',
-            }}
-          >
-            Built on WhatsApp
-          </motion.span>
-          <motion.h2
-            variants={fadeUp}
-            style={{
-              fontSize: 'clamp(28px, 4vw, 46px)',
-              fontWeight: '800', color: '#0f1117',
-              letterSpacing: '-0.5px', maxWidth: '700px',
-              margin: '0 auto', lineHeight: '1.15',
-            }}
-          >
-            Secured with WhatsApp's Built-In Privacy Protections
-          </motion.h2>
-        </motion.div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Cards */}
-        <motion.div
-          className="security-grid"
-          variants={stagger}
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}
-        >
-          {CARDS.map((card, i) => (
+        {/* Eyebrow and Headline */}
+        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#F97316] px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10">
+            Real Money · Real Users · Real Growth
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            How Ghana moves money with{' '}
+            <span className="text-gradient-orange">Brosa.</span>
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-slate-400">
+            From university campuses in Legon to merchants in Makola and families in Kumasi, Brosa powers thousands of daily frictionless transactions.
+          </p>
+        </div>
+
+        {/* 4 Large Metrics Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {METRICS.map((m, idx) => (
             <motion.div
-              key={i}
-              variants={fadeUp}
-              whileHover={{ y: -6, boxShadow: '0 24px 56px rgba(0,0,0,0.1)' }}
-              transition={{ y: { type: 'spring', stiffness: 400, damping: 20 } }}
-              style={{
-                background: '#fff',
-                borderRadius: '20px',
-                padding: '36px 28px',
-                boxShadow: '0 2px 20px rgba(0,0,0,0.055)',
-              }}
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:border-[#F97316]/40 hover:bg-white/[0.05] transition-all duration-300 group"
             >
-              <div style={{
-                width: '80px', height: '80px',
-                borderRadius: '18px',
-                background: `linear-gradient(135deg, ${card.color}18, ${card.color}32)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '36px', marginBottom: '24px',
-              }}>
-                {card.icon}
+              <div className="text-4xl sm:text-5xl font-black text-white tracking-tight group-hover:text-[#F97316] transition-colors">
+                {m.value}
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1117', marginBottom: '10px' }}>
-                {card.title}
-              </h3>
-              <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.7' }}>
-                {card.desc}
-              </p>
+              <div className="mt-3 text-base font-bold text-slate-200">
+                {m.label}
+              </div>
+              <div className="mt-1 text-xs text-slate-400">
+                {m.desc}
+              </div>
             </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .security-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .security-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+      </div>
     </section>
   );
 };

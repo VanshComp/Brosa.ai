@@ -1,335 +1,170 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { ShieldCheck, Sparkles, Building2, Smartphone, Users, Award, HeartHandshake } from "lucide-react";
+import { WHATSAPP_LINK } from "../utils/constants";
 
 const AboutPage = () => {
   const teamMembers = [
     {
-      name: "Peter Israel",
-      position: "CEO",
-      image:
-        "https://th.bing.com/th/id/OIP.bxhY64sVlbdXwb-wDVzylwHaHa?w=184&h=184&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-      bio: "We help businesses drive real revenue by transforming WhatsApp into a seamless ordering channel.",
+      name: "Sam Israel",
+      position: "Chief Executive Officer",
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces",
+      bio: "Pioneering conversational fintech in Africa. Passionate about removing financial friction for millions through WhatsApp.",
     },
     {
       name: "Godwin Acquah",
-      position: "COO",
-      image:
-        "https://th.bing.com/th/id/OIP.bxhY64sVlbdXwb-wDVzylwHaHa?w=184&h=184&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-      bio: "Dedicated to helping businesses succeed with WhatsApp ordering.",
+      position: "Chief Operating Officer",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
+      bio: "Leading regulatory compliance, banking partnerships, and nationwide merchant operations across Ghana.",
     },
     {
       name: "Vansh Gautam",
-      position: "CTO",
-      image:
-        "https://th.bing.com/th/id/OIP.bxhY64sVlbdXwb-wDVzylwHaHa?w=184&h=184&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-      bio: "Building future-ready, AI-first products where engineering meets exceptional user experience.",
+      position: "Chief Technology Officer",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+      bio: "Architecting high-throughput AI NLP engines, sub-second GhIPSS bank settlement protocols, and computer vision OCR.",
     },
   ];
 
-  const timeline = [
+  const milestones = [
+    {
+      year: "2024",
+      title: "The Friction Problem",
+      description: "Recognized that Ghanaians lose countless hours wrestling with clunky mobile banking apps and USSD session timeouts.",
+    },
     {
       year: "2025",
-      title: "Company Founded",
-      description:
-        "Brosa was born from the need for simpler restaurant ordering.",
-    }, 
+      title: "Conversational Banking Pilot",
+      description: "Launched Brosa AI on WhatsApp. Handled over $5,000,000 in pilot P2P and merchant transactions with rapid organic adoption.",
+    },
     {
       year: "2026",
-      title: "Completing Pilot and Launch take off:",
-      description:
-        "Brosa completed pilot and is set to lunch with other demanding services and expanding organically.",
+      title: "Global Multi-Currency & Bank Integration",
+      description: "Integrated direct settlements with 20+ commercial banks, instant computer vision receipt OCR, and merchant dynamic QR engine.",
     },
   ];
 
   const values = [
     {
-      icon: "🚀",
-      title: "Innovation",
-      description:
-        "We constantly push the boundaries of what's possible with WhatsApp ordering.",
+      icon: Smartphone,
+      title: "Frictionless Accessibility",
+      desc: "No apps to download, no 10MB updates. Financial services should live in the chat app everyone already loves."
     },
     {
-      icon: "❤️",
-      title: "Customer First",
-      description:
-        "Every decision we make is focused on helping our customers succeed.",
+      icon: ShieldCheck,
+      title: "Bank-Grade Security",
+      desc: "End-to-end encryption, 4-digit PIN authorizations, and an instant emergency kill-switch for absolute peace of mind."
     },
     {
-      icon: "🤝",
-      title: "Simplicity",
-      description:
-        "We believe technology should be simple and accessible to everyone.",
-    },
-    {
-      icon: "🌍",
-      title: "Global Impact",
-      description:
-        "We're committed to helping businesses worldwide thrive in the digital age.",
+      icon: Sparkles,
+      title: "Context-Aware AI",
+      desc: "Our AI understands natural Ghanaian speech, shorthand amounts like '2k', handwritten account receipts, and contact cards."
     },
   ];
 
   return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-teal-50 to-blue-50">
-        <div className="container-custom text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl lg:text-6xl font-bold mb-6"
-          >
-            <span className="heading-gradient">About Brosa AI</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto"
-          >
-            We're on a mission to simplify online ordering for businesses
-            worldwide
-          </motion.p>
-        </div>
-      </section>
+    <div className="pt-28 pb-20 bg-[#FAFAFA] min-h-screen text-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Mission Section */}
-      <section className="py-20 lg:py-32">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center lg:text-center"
-            >
-              <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
-              <p className="text-lg text-gray-600 mb-6">
-                At Brosa AI, we believe that every business deserves access to
-                cutting-edge technology without the complexity or high costs
-                typically associated with it. Our mission is to democratize
-                online ordering by leveraging the power of WhatsApp - a platform
-                that billions of people already use and trust.
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                We started with a simple observation: while food delivery apps
-                were becoming increasingly popular, they were also becoming
-                increasingly expensive for small businesses. The high commission
-                fees, complex setup processes, and technical barriers were
-                preventing many worthy establishments from participating in the
-                digital economy.
-              </p>
-              <p className="text-lg text-gray-600">
-                That's why we created Brosa AI - a solution that's as simple as
-                scanning a QR code, but as powerful as any enterprise ordering
-                system.
-              </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <img
-                src="/images/hero-phone.png"
-                alt="Brosa AI Platform"
-                className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
-              />
-            </motion.div>
+        {/* Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16 sm:mb-24">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#EA580C] bg-orange-50 px-3.5 py-1.5 rounded-full border border-orange-200/80">
+            About Brosa AI
+          </span>
+          <h1 className="mt-4 text-4xl sm:text-6xl font-black tracking-tight text-slate-900">
+            One platform to rule your{' '}
+            <span className="text-gradient-orange">financial world.</span>
+          </h1>
+          <p className="mt-6 text-base sm:text-lg text-slate-600 leading-relaxed">
+            We believe moving money should be as simple and natural as texting a friend. Brosa is turning WhatsApp into Africa’s most intelligent financial assistant.
+          </p>
+        </div>
+
+        {/* Mission Banner */}
+        <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-[#1C0A00] text-white rounded-3xl p-8 sm:p-14 mb-20 shadow-xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-2xl space-y-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#F97316]">Our Mission</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+              Democratizing financial power for 1 billion Africans.
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              By combining state-of-the-art conversational AI with existing mobile money and commercial banking rails, Brosa removes the friction, USSD timeouts, and confusion from every dollar you move.
+            </p>
+          </div>
+
+          <div className="flex-shrink-0 text-center p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="text-4xl font-black text-[#F97316]">$25M+</div>
+            <div className="text-xs text-slate-400 mt-1">Safely Transacted</div>
           </div>
         </div>
-      </section>
 
-      {/* Values Section */}
-      <section className="py-20 lg:py-32 bg-gray-50">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="heading-gradient">Our Values</span>
+        {/* Core Values */}
+        <div className="mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Built on Unwavering Principles
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              These core values guide every decision we make and every feature
-              we build
-            </p>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 text-center"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="text-4xl mb-4 inline-block"
-                >
-                  {value.icon}
-                </motion.div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600">{value.description}</p>
-              </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {values.map((v, i) => {
+              const Icon = v.icon;
+              return (
+                <div key={i} className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-xl transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#EA580C] flex items-center justify-center mb-6">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{v.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{v.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Milestones Timeline */}
+        <div className="mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Our Journey
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {milestones.map((m, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                <span className="text-2xl font-black text-[#EA580C] font-mono">{m.year}</span>
+                <h3 className="text-lg font-bold text-slate-900 mt-2">{m.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">{m.description}</p>
+              </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Team Section */}
-      <section className="py-20 lg:py-32">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="heading-gradient">Meet Our Team</span>
+        {/* Leadership Team */}
+        <div className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Leadership Team
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The passionate people behind Brosa AI\'s success
-            </p>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 
-                gap-x-16 gap-y-20 
-                max-w-6xl mx-auto place-items-center">
-
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.03 }}
-                className="bg-white rounded-2xl p-8 shadow-lg 
-           hover:shadow-2xl hover:ring-2 hover:ring-teal-200
-           transition-all duration-300 text-center"
-              >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {teamMembers.map((member, idx) => (
+              <div key={idx} className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm text-center">
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                  className="w-24 h-24 rounded-full mx-auto object-cover mb-4 border-2 border-orange-200"
                 />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-teal-600 font-medium mb-4">
-                  {member.position}
-                </p>
-                <p className="text-gray-600 text-sm">{member.bio}</p>
-              </motion.div>
+                <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
+                <div className="text-xs font-semibold text-[#EA580C] mb-3">{member.position}</div>
+                <p className="text-xs text-slate-600 leading-relaxed">{member.bio}</p>
+              </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Timeline Section */}
-      <section className="py-20 lg:py-32 bg-gray-50">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="heading-gradient">Our Journey</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From a simple idea to a platform serving thousands of businesses
-            </p>
-          </motion.div>
-
-          <div className="max-w-4xl mx-auto">
-            {timeline.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className={`flex items-center mb-12 ${
-                  index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                }`}
-              >
-                <div className="flex-1">
-                  <div
-                    className={`bg-white rounded-2xl p-6 shadow-lg ${
-                      index % 2 === 0 ? "mr-8" : "ml-8"
-                    }`}
-                  >
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                        {item.year}
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {item.title}
-                      </h3>
-                    </div>
-                    <p className="text-gray-600">{item.description}</p>
-                  </div>
-                </div>
-                <div className="w-4 h-4 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full relative z-10"></div>
-                <div className="flex-1"></div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-teal-600 to-blue-600">
-        <div className="container-custom text-center text-white">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl lg:text-5xl font-bold mb-6"
-          >
-            Join Us on Our Mission
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-xl mb-8 max-w-3xl mx-auto"
-          >
-            Ready to transform your business with WhatsApp ordering? Start your
-            journey with us today.
-          </motion.p>
-          <motion.a
-            href="https://forms.gle/M2bzMeER3nURvzyM9"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            Get Started Today
-          </motion.a>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };

@@ -1,215 +1,170 @@
-// App Constants
-export const APP_NAME = 'Brosa AI';
-export const APP_TAGLINE = 'WhatsApp Ordering Made Simple';
-export const APP_DESCRIPTION = 'Transform your business with WhatsApp ordering. No apps needed - just scan, order, and pay.';
+// Brosa AI - Financial Super-App Constants
+export const APP_NAME = 'Brosa';
+export const APP_TAGLINE = 'One Platform to Rule Your Financial World';
+export const APP_DESCRIPTION = 'Brosa is Africa’s next-gen conversational fintech super-app on WhatsApp: send MoMo P2P, transfer to 20+ Ghana banks, buy airtime & bundles, pay bills, and track spending — directly in chat.';
 
-// API Endpoints
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Official WhatsApp Link
+export const WHATSAPP_NUMBER = '+233 59 811 1199';
+export const WHATSAPP_LINK = 'https://wa.me/233598111199?text=Hi%20Brosa';
 
-// Local Storage Keys
-export const STORAGE_KEYS = {
-  AUTH_TOKEN: 'brosa_auth_token',
-  USER_PREFERENCES: 'brosa_user_preferences',
-  CART_ITEMS: 'brosa_cart_items',
-};
-
-// Animation Settings
-export const ANIMATION_SETTINGS = {
-  DURATION: {
-    FAST: 0.3,
-    NORMAL: 0.5,
-    SLOW: 0.8,
-  },
-  EASING: {
-    EASE_OUT: 'easeOut',
-    EASE_IN_OUT: 'easeInOut',
-    BOUNCE: 'backOut',
-  },
-  STAGGER: 0.1,
-};
-
-// Business Categories
-export const BUSINESS_CATEGORIES = [
-  { id: 'bakeries', name: 'Bakeries', icon: '🥖' },
-  { id: 'butchers', name: 'Butchers', icon: '🥩' },
-  { id: 'sandwiches', name: 'Sandwich Shops', icon: '🥪' },
-  { id: 'fries', name: 'Fries Shops', icon: '🍟' },
-  { id: 'fast-food', name: 'Fast Food', icon: '🍔' },
-  { id: 'ecommerce', name: 'E-commerce', icon: '🛒' },
-  { id: 'restaurants', name: 'Restaurants', icon: '🍽️' },
+// Supported Networks & Top Banks in Ghana
+export const SUPPORTED_NETWORKS = [
+  { name: 'MTN Mobile Money', short: 'MTN MoMo', color: '#FFCC00', textColor: '#000' },
+  { name: 'Telecel Cash', short: 'Telecel Cash', color: '#E60000', textColor: '#FFF' },
+  { name: 'AT Money', short: 'AT Money', color: '#0055A5', textColor: '#FFF' },
 ];
 
-// Feature List
-export const FEATURES = [
+export const SUPPORTED_BANKS = [
+  'Ecobank Ghana',
+  'Stanbic Bank',
+  'GCB Bank',
+  'Zenith Bank',
+  'Fidelity Bank',
+  'Absa Bank',
+  'Access Bank',
+  'CalBank',
+  'Consolidated Bank Ghana (CBG)',
+  'Standard Chartered',
+  'First National Bank',
+  'Prudential Bank',
+  'Societe Generale',
+  'Agricultural Development Bank (ADB)',
+  'Republic Bank',
+  'Universal Merchant Bank (UMB)',
+  'Guaranty Trust Bank (GTBank)',
+  'Bank of Africa',
+  'FBNBank',
+  'OmniBSIC Bank',
+];
+
+// Key Metrics
+export const METRICS = [
+  { label: 'Volume Processed', value: '₵25M+', desc: 'Across Global Wallets & Banks' },
+  { label: 'Transaction Speed', value: '< 3s', desc: 'Average completion time' },
+  { label: 'AI Accuracy', value: '99.8%', desc: 'Intent & receipt OCR recognition' },
+  { label: 'Banks & Mobile Wallets', value: 'ALL', desc: 'Major commercial banks & rails' },
+];
+
+// Features List
+export const CORE_FEATURES = [
   {
-    title: 'Automated Ordering & Easy Payments',
-    description: 'Customers scan your Brosa QR code, browse your menu, place orders instantly, and pay securely, all within WhatsApp.',
-    icon: '📱',
+    id: 'p2p-momo',
+    tag: 'INSTANT TRANSFERS',
+    title: 'P2P & Bank Transfers in 1 Chat',
+    description: 'Send money instantly to mobile wallets or 20+ commercial bank accounts. No app download, no account number memorization.',
+    command: 'Pay $150 to 0553277031 Sam',
   },
   {
-    title: 'Boost Sales with WhatsApp Reach',
-    description: 'Engage customers directly on the app they use every day. With WhatsApp promotions and notifications, your offers reach more people.',
-    icon: '📢',
+    id: 'receipt-ocr',
+    tag: 'COMPUTER VISION AI',
+    title: 'Snap & Pay (Image & Contact Recognition)',
+    description: 'Take a picture of a handwritten account number, bill receipt, or share a phone contact card. Brosa auto-detects the account details and sets up the transfer in seconds.',
+    command: '📷 [Photo of handwritten account 9040013948008 Stanbic]',
   },
   {
-    title: 'Reduce Stress, Serve Better',
-    description: 'Streamlined orders mean less crowding and confusion. Vendors manage orders efficiently, customers enjoy faster service.',
-    icon: '🎯',
+    id: 'airtime-bundles',
+    tag: 'TELCO SERVICES',
+    title: 'Airtime & High-Speed Data Bundles',
+    description: 'Recharge airtime and buy non-expiring data bundles for major networks at discount rates directly from WhatsApp.',
+    command: 'Buy $20 airtime for 0244123456',
+  },
+  {
+    id: 'ai-insights',
+    tag: 'INTELLIGENT WEALTH',
+    title: 'AI Expense Tracking & Real-Time Insights',
+    description: 'Understand exactly where your money goes. Brosa categorizes food, bills, transfers, and savings automatically with weekly smart summaries.',
+    command: 'How much did I spend this week?',
+  },
+  {
+    id: 'emergency-freeze',
+    tag: 'BANK-GRADE SECURITY',
+    title: 'Instant Account Freeze Protocol',
+    description: 'Lost your phone or suspect unauthorized access? Text "BLOCK" from any phone or browser to freeze your account instantly.',
+    command: 'BLOCK ACCOUNT',
+  },
+  {
+    id: 'merchant-qr',
+    tag: 'BUSINESS & COMMERCE',
+    title: 'Dynamic QR & Merchant Payouts',
+    description: 'Accept payments at your shop, stall, or website with dynamic instant-payment QR codes, POS soundbox alerts, and zero monthly fees.',
+    command: 'Generate QR for $50.00',
   },
 ];
 
-// Pricing Plans
-export const PRICING_PLANS = {
-  STARTER: {
-    name: 'Starter',
-    price: { monthly: 29, yearly: 290 },
-    features: [
-      'Up to 100 orders/month',
-      'Basic menu management',
-      'QR code generation',
-      'WhatsApp integration',
-      'Email support',
-    ],
+// Customer Testimonials
+export const TESTIMONIALS = [
+  {
+    quote: "Sending money straight to a bank account in 5 seconds via WhatsApp is mindblowing. I don't use clunky mobile banking apps anymore.",
+    author: "Kwame Mensah",
+    role: "Software Engineer",
+    location: "Accra, Ghana",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
+    rating: 5,
   },
-  PROFESSIONAL: {
-    name: 'Professional',
-    price: { monthly: 79, yearly: 790 },
-    features: [
-      'Up to 1000 orders/month',
-      'Advanced menu management',
-      'Multiple QR codes',
-      'Priority WhatsApp support',
-      'Phone & email support',
-      'Advanced analytics',
-    ],
+  {
+    quote: "The photo payment is crazy! A customer gave me a handwritten account number on paper, I just snapped a photo to Brosa and it verified the account name instantly.",
+    author: "Abena Osei",
+    role: "Merchant & Boutique Owner",
+    location: "Kumasi, Ghana",
+    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=faces",
+    rating: 5,
   },
-  ENTERPRISE: {
-    name: 'Enterprise',
-    price: { monthly: 199, yearly: 1990 },
-    features: [
-      'Unlimited orders',
-      'Custom menu solutions',
-      'White-label options',
-      'Dedicated support manager',
-      '24/7 phone support',
-      'API access',
-    ],
+  {
+    quote: "Buying data bundles and sending $2k to my mom takes literally 10 seconds. Brosa understands natural words like 'pay $2k to 055...'. It feels like texting a personal banker.",
+    author: "Kofi Boateng",
+    role: "University Student",
+    location: "Legon",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
+    rating: 5,
   },
-};
-
-// Form Validation Rules
-export const VALIDATION_RULES = {
-  EMAIL: {
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    message: 'Please enter a valid email address',
+  {
+    quote: "As a freelancer receiving payments from various clients, having Brosa handle payments, track weekly expenses, and generate instant receipts is indispensable.",
+    author: "Esi Darko",
+    role: "Creative Director",
+    location: "Takoradi",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=faces",
+    rating: 5,
   },
-  PHONE: {
-    pattern: /^[\+]?[1-9][\d]{0,15}$/,
-    message: 'Please enter a valid phone number',
+];
+
+// FAQ List
+export const FAQS = [
+  {
+    question: "What is Brosa AI?",
+    answer: "Brosa is a WhatsApp-based payment platform that makes it easy to send, receive, and make payments locally and across borders, without downloading another app.",
   },
-  URL: {
-    pattern: /^https?:\/\/.+\..+/,
-    message: 'Please enter a valid URL',
+  {
+    question: "Do I need to download a separate app?",
+    answer: "No! Brosa works entirely inside WhatsApp, the app you already have on your phone and use every day. Just message Brosa on WhatsApp to start transacting instantly.",
   },
-};
-
-// Error Messages
-export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Network error. Please check your connection.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  UNAUTHORIZED: 'You are not authorized to perform this action.',
-  NOT_FOUND: 'The requested resource was not found.',
-  VALIDATION_ERROR: 'Please check your input and try again.',
-};
-
-// Success Messages
-export const SUCCESS_MESSAGES = {
-  FORM_SUBMITTED: 'Form submitted successfully!',
-  PROFILE_UPDATED: 'Profile updated successfully!',
-  ORDER_PLACED: 'Order placed successfully!',
-  PASSWORD_CHANGED: 'Password changed successfully!',
-};
-
-// Breakpoints
-export const BREAKPOINTS = {
-  MOBILE: 768,
-  TABLET: 1024,
-  DESKTOP: 1200,
-};
-
-// Local Storage TTL (Time To Live) in milliseconds
-export const STORAGE_TTL = {
-  SHORT: 5 * 60 * 1000, // 5 minutes
-  MEDIUM: 24 * 60 * 60 * 1000, // 24 hours
-  LONG: 30 * 24 * 60 * 60 * 1000, // 30 days
-};
-
-// Default Values
-export const DEFAULT_VALUES = {
-  PAGE_TITLE: `${APP_NAME} - ${APP_TAGLINE}`,
-  LOCALE: 'en-US',
-  TIMEZONE: 'UTC',
-  CURRENCY: 'USD',
-  DATE_FORMAT: 'YYYY-MM-DD',
-  TIME_FORMAT: 'HH:mm:ss',
-};
-
-// Social Media Links
-export const SOCIAL_LINKS = {
-  TWITTER: 'https://twitter.com/brosaai',
-  FACEBOOK: 'https://facebook.com/brosaai',
-  LINKEDIN: 'https://linkedin.com/company/brosaai',
-  INSTAGRAM: 'https://instagram.com/brosaai',
-  YOUTUBE: 'https://youtube.com/@brosaai',
-};
-
-// Support Links
-export const SUPPORT_LINKS = {
-  HELP_CENTER: '/help',
-  DOCUMENTATION: '/docs',
-  COMMUNITY: '/community',
-  PRIVACY_POLICY: '/privacy',
-  TERMS_OF_SERVICE: '/terms',
-};
-
-// Analytics Events
-export const ANALYTICS_EVENTS = {
-  PAGE_VIEW: 'page_view',
-  BUTTON_CLICK: 'button_click',
-  FORM_SUBMIT: 'form_submit',
-  QR_SCAN: 'qr_scan',
-  ORDER_PLACED: 'order_placed',
-  USER_SIGNUP: 'user_signup',
-  USER_LOGIN: 'user_login',
-};
-
-// Feature Flags
-export const FEATURE_FLAGS = {
-  ENABLE_ANALYTICS: true,
-  ENABLE_CHAT: false,
-  ENABLE_MULTILINGUAL: false,
-  ENABLE_DARK_MODE: false,
-  ENABLE_PUSH_NOTIFICATIONS: false,
-};
+  {
+    question: "Which networks and banks are supported?",
+    answer: "Brosa supports all major Mobile Money networks as well as all 20+ commercial banks (including Ecobank, Stanbic, GCB, Fidelity, Zenith, Absa, Access, CalBank, and CBG).",
+  },
+  {
+    question: "What is the maximum transfer limit?",
+    answer: "Maximum transfer limits differ based on your location and the payment method you use. Chat with Brosa to check the specific limit for your region.",
+  },
+  {
+    question: "How does 'Snap & Pay' feature work?",
+    answer: "Simply take a photo of any bank/mobile money account number or invoice and share it with Brosa on WhatsApp and tell it to what to do...",
+  },
+  {
+    question: "Is Brosa secure?",
+    answer: "ABSOLUTELY, brosa is 100% secure because BROSA does not asks sensitive data like your pin and also provides you an extra layer to further protect your account",
+  },
+];
 
 export default {
   APP_NAME,
   APP_TAGLINE,
   APP_DESCRIPTION,
-  API_BASE_URL,
-  STORAGE_KEYS,
-  ANIMATION_SETTINGS,
-  BUSINESS_CATEGORIES,
-  FEATURES,
-  PRICING_PLANS,
-  VALIDATION_RULES,
-  ERROR_MESSAGES,
-  SUCCESS_MESSAGES,
-  BREAKPOINTS,
-  STORAGE_TTL,
-  DEFAULT_VALUES,
-  SOCIAL_LINKS,
-  SUPPORT_LINKS,
-  ANALYTICS_EVENTS,
-  FEATURE_FLAGS,
+  WHATSAPP_NUMBER,
+  WHATSAPP_LINK,
+  SUPPORTED_NETWORKS,
+  SUPPORTED_BANKS,
+  METRICS,
+  CORE_FEATURES,
+  TESTIMONIALS,
+  FAQS,
 };

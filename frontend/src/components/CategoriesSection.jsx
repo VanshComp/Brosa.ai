@@ -13,7 +13,7 @@ const stagger = {
 const USE_CASES = [
   {
     icon: '🍛',
-    label: 'Ordered GHS 60',
+    label: 'Ordered $60',
     vendor: "Mama Abena's Kitchen",
     title: 'Ordering from a Restaurant',
     desc: 'Order your favourite meals anytime — no app, no cash queue.',
@@ -22,7 +22,7 @@ const USE_CASES = [
   },
   {
     icon: '🏪',
-    label: 'Ordered GHS 120',
+    label: 'Ordered $120',
     vendor: 'City Market Vendor',
     title: 'Buying from a Market Vendor',
     desc: 'Settle up at your local market with just a WhatsApp message.',
@@ -31,7 +31,7 @@ const USE_CASES = [
   },
   {
     icon: '👥',
-    label: 'Shared GHS 45',
+    label: 'Shared $45',
     vendor: 'Group Lunch Split',
     title: 'Splitting a Bill with Friends',
     desc: 'Split bills instantly. No awkward delays or IOUs.',
@@ -40,7 +40,7 @@ const USE_CASES = [
   },
   {
     icon: '✂️',
-    label: 'Tipped GHS 20',
+    label: 'Tipped $20',
     vendor: "Kwame's Barbershop",
     title: 'Paying at a Barbershop',
     desc: 'Get groomed, then scan to pay. Beautifully simple.',

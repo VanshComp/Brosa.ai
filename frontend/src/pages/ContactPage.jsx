@@ -1,415 +1,208 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { MessageSquare, Mail, Phone, MapPin, Send, CheckCircle2, Clock } from 'lucide-react';
+import { WHATSAPP_LINK, WHATSAPP_NUMBER } from '../utils/constants';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    company: '',
     phone: '',
     subject: '',
     message: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate form submission
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        phone: '',
-        subject: '',
-        message: '',
-      });
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
+    setTimeout(() => {
       setIsSubmitting(false);
-    }
+      setSubmitted(true);
+    }, 1000);
   };
 
-  const contactInfo = [
-    {
-      icon: '📧',
-      title: 'Email Us',
-      description: 'Get in touch with our team',
-      details: ['hello@brosa.ai'],
-    },
-    {
-      icon: '📞',
-      title: 'Call Us',
-      description: 'Speak with our experts',
-      details: ['+233 20 343 1334', '+233 24 136 6340'],
-    },
-    {
-      icon: '💬',
-      title: 'Live Chat',
-      description: 'Get instant support',
-      details: ['Available 24/7', 'Average response: 2 min'],
-    },
-    {
-      icon: '📍',
-      title: 'Visit Us',
-      description: 'Meet us in person',
-      details: ['14 Hayford Road', 'Airport Commercial Area, Accra Ghana'],
-    },
-  ];
-
   return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-teal-50 to-blue-50">
-        <div className="container-custom text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl lg:text-6xl font-bold mb-6"
-          >
-            <span className="heading-gradient">Get in Touch</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto"
-          >
-            We're here to help you succeed with WhatsApp ordering
-          </motion.p>
+    <div className="pt-28 pb-20 bg-[#FAFAFA] min-h-screen text-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16 sm:mb-20">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#EA580C] bg-orange-50 px-3.5 py-1.5 rounded-full border border-orange-200/80">
+            Get in Touch
+          </span>
+          <h1 className="mt-4 text-4xl sm:text-6xl font-black tracking-tight text-slate-900">
+            We’re here to help you{' '}
+            <span className="text-gradient-orange">24/7.</span>
+          </h1>
+          <p className="mt-6 text-base sm:text-lg text-slate-600 leading-relaxed">
+            Whether you need merchant onboarding assistance, developer API access, or transaction support, our team is always within reach.
+          </p>
         </div>
-      </section>
 
-      {/* Contact Info Section */}
-      <section className="py-20 lg:py-32">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {contactInfo.map((info, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 text-center border border-gray-100"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="text-4xl mb-4 inline-block"
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          {/* Left Contact Info Cards */}
+          <div className="lg:col-span-5 space-y-6">
+            
+            {/* Primary WhatsApp Card */}
+            <div className="p-7 rounded-3xl bg-gradient-to-br from-slate-950 to-slate-900 text-white border border-white/10 shadow-xl space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#25D366]/20 text-[#25D366] flex items-center justify-center font-bold">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold">Instant WhatsApp Support</h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                The fastest way to get in touch with our operations desk. Live agents available 24/7.
+              </p>
+              <div className="pt-2">
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#F97316] to-[#EA580C] shadow-lg shadow-orange-500/30"
                 >
-                  {info.icon}
-                </motion.div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{info.title}</h3>
-                <p className="text-gray-600 mb-4">{info.description}</p>
-                <div className="space-y-1">
-                  {info.details.map((detail, i) => (
-                    <p key={i} className="text-sm text-gray-700 font-medium">{detail}</p>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Message {WHATSAPP_NUMBER}</span>
+                </a>
+              </div>
+            </div>
 
-      {/* Contact Form Section */}
-      <section className="py-20 lg:py-32 bg-gray-50">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                  <span className="heading-gradient">Send us a Message</span>
-                </h2>
-                <p className="text-gray-600 text-lg">
-                  Fill out the form below and we'll get back to you within 24 hours
-                </p>
+            {/* Email & Location */}
+            <div className="p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500 font-medium">Email Enquiries</div>
+                  <div className="text-sm font-bold text-slate-900 mt-0.5">support@brosa.ai</div>
+                  <div className="text-xs text-slate-500">partnerships@brosa.ai</div>
+                </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300"
-                      placeholder="your@email.com"
-                    />
-                  </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5" />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300"
-                      placeholder="Your company"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300"
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-                </div>
-
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="demo">Request a Demo</option>
-                    <option value="pricing">Pricing Inquiry</option>
-                    <option value="support">Technical Support</option>
-                    <option value="partnership">Partnership Opportunity</option>
-                    <option value="other">Other</option>
-                  </select>
+                  <div className="text-xs text-slate-500 font-medium">Headquarters</div>
+                  <div className="text-sm font-bold text-slate-900 mt-0.5">Accra, Greater Accra Region</div>
+                  <div className="text-xs text-slate-500">Ghana, West Africa</div>
                 </div>
+              </div>
 
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-5 h-5" />
+                </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-300 resize-none"
-                    placeholder="Tell us how we can help you..."
-                  ></textarea>
+                  <div className="text-xs text-slate-500 font-medium">Operational Hours</div>
+                  <div className="text-sm font-bold text-slate-900 mt-0.5">24/7 Automated AI Banking</div>
+                  <div className="text-xs text-slate-500">Human Escalation: 8am - 10pm GMT</div>
                 </div>
+              </div>
+            </div>
 
-                <div className="text-center">
-                  <motion.button
+          </div>
+
+          {/* Right Form Card */}
+          <div className="lg:col-span-7">
+            <div className="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200/90 shadow-sm">
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Send us a Message</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mb-8">
+                Fill out the form below and an account specialist will respond within 4 business hours.
+              </p>
+
+              {submitted ? (
+                <div className="p-8 text-center bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3">
+                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
+                  <h4 className="text-lg font-bold text-slate-900">Message Received!</h4>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    Thank you for reaching out. A Brosa representative will review your request and get back to you shortly.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Kwame Mensah"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#EA580C]"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="kwame@example.com"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#EA580C]"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Phone / WhatsApp Number</label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="+233 24 000 0000"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#EA580C]"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Subject</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Merchant Inquiry / API Access"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#EA580C]"
+                        value={formData.subject}
+                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Message</label>
+                    <textarea
+                      rows="4"
+                      required
+                      placeholder="How can Brosa help your business or personal transfers?"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#EA580C]"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    />
+                  </div>
+
+                  <button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="btn-primary text-lg px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#F97316] to-[#EA580C] shadow-lg shadow-orange-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2"
                   >
-                    {isSubmitting ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Sending...</span>
-                      </div>
-                    ) : (
-                      'Send Message'
-                    )}
-                  </motion.button>
-                </div>
-              </form>
-
-              {/* Success/Error Messages */}
-              <AnimatePresence>
-                {submitStatus === 'success' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="mt-8 p-4 bg-green-100 border border-green-300 rounded-lg text-green-800 text-center"
-                  >
-                    <div className="flex items-center justify-center space-x-2">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Message sent successfully! We'll get back to you soon.</span>
-                    </div>
-                  </motion.div>
-                )}
-                {submitStatus === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="mt-8 p-4 bg-red-100 border border-red-300 rounded-lg text-red-800 text-center"
-                  >
-                    <div className="flex items-center justify-center space-x-2">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                      <span>Sorry, there was an error sending your message. Please try again.</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    <Send className="w-4 h-4" />
+                    <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+                  </button>
+                </form>
+              )}
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Additional Resources */}
-      <section className="py-20 lg:py-32">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="heading-gradient">Additional Resources</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore these helpful resources to learn more about Brosa AI
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Help Center',
-                description: 'Find answers to common questions and learn how to use Brosa AI effectively.',
-                link: '/',
-                icon: '📚',
-              },
-              {
-                title: 'Documentation',
-                description: 'Technical documentation and guides for developers and advanced users.',
-                link: '/',
-                icon: '📖',
-              },
-              {
-                title: 'Community Forum',
-                description: 'Connect with other Brosa AI users and share best practices.',
-                link: '/',
-                icon: '👥',
-              },
-            ].map((resource, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 text-center border border-gray-100"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="text-4xl mb-4 inline-block"
-                >
-                  {resource.icon}
-                </motion.div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{resource.title}</h3>
-                <p className="text-gray-600 mb-6">{resource.description}</p>
-                <Link
-                  to={resource.link}
-                  className="text-teal-600 font-semibold hover:text-teal-700 transition-colors duration-300"
-                >
-                  Learn More →
-                </Link>
-              </motion.div>
-            ))}
           </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-teal-600 to-blue-600">
-        <div className="container-custom text-center text-white">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl lg:text-5xl font-bold mb-6"
-          >
-            Ready to Transform Your Business?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-xl mb-8 max-w-3xl mx-auto"
-          >
-            Don't wait - start your free trial today and see how Brosa AI can help your business grow
-          </motion.p>
-          <motion.a
-            href="https://forms.gle/M2bzMeER3nURvzyM9"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            Start Free Trial
-          </motion.a>
         </div>
-      </section>
+
+      </div>
     </div>
   );
 };

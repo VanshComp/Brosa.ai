@@ -1,166 +1,181 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import BrosaLogo from '../images/brosa-logo.png';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { MessageSquare, ArrowRight, ShieldCheck } from 'lucide-react';
+import BrosaLogoWhite from '../images/brosa-logo-white.png';
+import { WHATSAPP_LINK } from '../utils/constants';
 
-import footerVideo from '../assets/footer_video.mp4';
-
-const FOOTER_LINKS = [
-  { label: 'Terms',          path: '/terms' },
-  { label: 'Privacy Policy', path: '/privacy' },
-  { label: 'Blogs',          path: '/blog' },
-];
-
-const SOCIAL_LINKS = [
-  { 
-    name: 'Instagram', 
-    url: 'https://www.instagram.com/trybrosa?igsh=bmd3dXRrc3ZtcDdj', 
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-      </svg>
-    )
+const FOOTER_NAV = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'P2P MoMo Transfer', href: '#product' },
+      { label: 'MoMo to Bank', href: '#product' },
+      { label: 'Snap & Pay OCR', href: '#product' },
+      { label: 'Airtime & Data', href: '#product' },
+      { label: 'AI Spending Insights', href: '#product' },
+    ]
   },
-  { 
-    name: 'Facebook',  
-    url: 'https://www.facebook.com/TryBrosa/',   
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-      </svg>
-    )
+  {
+    title: 'Use Cases',
+    links: [
+      { label: 'Individuals & Families', href: '#use-cases' },
+      { label: 'Merchants & Shops', href: '#use-cases' },
+      { label: 'Freelancers & Creators', href: '#use-cases' },
+      { label: 'Diaspora & Cross-Border', href: '#use-cases' },
+      { label: 'Campus Ambassadors 🎓', href: '#ambassador' },
+    ]
   },
-  { 
-    name: 'Twitter',   
-    url: 'https://x.com/tryBrosa',                          
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-      </svg>
-    )
+  {
+    title: 'Infrastructure',
+    links: [
+      { label: 'Developer APIs', href: '#developers' },
+      { label: 'Dynamic QR Engine', href: '#features' },
+      { label: 'Security & PIN Protocol', href: '#security' },
+      { label: 'Emergency Lock', href: '#security' },
+    ]
   },
-  { 
-    name: 'TikTok',   
-    url: 'https://www.tiktok.com/@trybrosa',                          
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
-      </svg>
-    )
-  },
+  {
+    title: 'Legal & Company',
+    links: [
+      { label: 'Terms of Service', to: '/terms' },
+      { label: 'Privacy Policy', to: '/privacy' },
+      { label: 'Contact Support', href: "https://wa.me/233203431334?text=Support%20Brosa", isExternal: true },
+      { label: 'FAQs', href: '#faq' },
+    ]
+  }
 ];
 
 const Footer = () => {
-  const year = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/', { state: { scrollToTop: true } });
+    }
+  };
+
+  const handleAnchorClick = (e, href) => {
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const id = href.replace('#', '');
+      if (location.pathname !== '/') {
+        navigate('/', { state: { scrollTo: id } });
+      } else {
+        const el = document.getElementById(id);
+        if (el) {
+          const navOffset = 80;
+          const y = el.getBoundingClientRect().top + window.scrollY - navOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    }
+  };
 
   return (
-    <footer style={{ background: '#FFF7ED', position: 'relative', zIndex: 18, borderTop: '1px solid rgba(249,115,22,0.1)' }}>
+    <footer className="bg-[#070112] text-slate-400 border-t border-[#320472]/50 relative overflow-hidden">
+      {/* Ambient royal purple mesh glow with #320472 */}
+      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-[#320472]/45 via-[#4C1D95]/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[300px] bg-gradient-to-t from-[#320472]/35 via-[#EA580C]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-      {/* ── Top bar ─────────────────────────────────────── */}
-      <div style={{
-        maxWidth: '1280px', margin: '0 auto', padding: '16px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        flexWrap: 'wrap', gap: '16px',
-        borderBottom: '1px solid rgba(249,115,22,0.06)',
-      }}>
-        <nav style={{ display: 'flex', gap: '28px', flexWrap: 'wrap', alignItems: 'center' }}>
-          {FOOTER_LINKS.map(link => (
-            <Link
-              key={link.label}
-              to={link.path}
-              style={{ fontSize: '14px', color: '#78716C', textDecoration: 'none', fontWeight: '500', transition: 'color 0.2s ease' }}
-              onMouseEnter={e => e.target.style.color = '#EA580C'}
-              onMouseLeave={e => e.target.style.color = '#78716C'}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12 relative z-10">
+
+        {/* Top 4-Column Link Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-12 pb-14 border-b border-[#320472]/30">
+
+          {/* Brand Col */}
+          <div className="col-span-2 space-y-4">
+            <button
+              onClick={handleLogoClick}
+              className="inline-block group py-1 text-left cursor-pointer focus:outline-none"
+              aria-label="Brosa Home - Scroll to top"
             >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+              <div className="inline-flex items-center px-4 py-2 rounded-2xl bg-[#320472] border border-[#320472]/80 shadow-lg shadow-[#320472]/40 group-hover:scale-105 transition-transform duration-200">
+                <img
+                  src={BrosaLogoWhite}
+                  alt="Brosa"
+                  className="h-7 sm:h-8 md:h-9 w-auto object-contain"
+                />
+              </div>
+            </button>
 
-        <p style={{ fontSize: '13px', color: '#a8a29e', fontWeight: '400' }}>
-          © {year} Brosa AI. All rights reserved.
-        </p>
-      </div>
-
-      {/* ── Brand strip ─────────────────────────────────── */}
-      <div style={{
-        maxWidth: '1280px', margin: '0 auto', padding: '24px 24px 32px',
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
-        flexWrap: 'wrap', gap: '20px',
-      }}>
-        {/* Logo + Video */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '280px' }}>
-          <video
-            src={footerVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{ 
-              width: '100%', 
-              borderRadius: '24px', 
-              boxShadow: '0 12px 40px rgba(0,0,0,0.06)',
-              mixBlendMode: 'multiply',
-              filter: 'brightness(1.02) contrast(1.02)'
-            }}
-          />
-        </div>
-
-        {/* Right: tagline + socials */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-          <div style={{ textAlign: 'right', marginBottom: '8px' }}>
-            <p style={{ fontSize: '12px', color: '#a8a29e', margin: '0', lineHeight: '1.1' }}>
-              Your daily lifestyle, powered by Brosa
+            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
+              Brosa is a WhatsApp-based payment platform that makes it easy to send, receive, and make payments locally and across borders, without downloading another app.
             </p>
-            <p style={{ fontSize: '12px', color: '#a8a29e', margin: '0', lineHeight: '1.1' }}>
-              Ghana 🇬🇭
-            </p>
-          </div>
-          
-          {/* Contact Details */}
-          <div style={{ textAlign: 'right', marginBottom: '8px' }}>
-            <a href="tel:+233203431334" style={{ display: 'block', fontSize: '14px', fontWeight: '800', color: '#1C0A00', textDecoration: 'none', lineHeight: '1.2' }}>+233 20 343 1334</a>
-            <a href="mailto:Hello@brosa.ai" style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#EA580C', textDecoration: 'none', lineHeight: '1.2' }}>Hello@brosa.ai</a>
-          </div>
 
-          {/* Social icons */}
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            {SOCIAL_LINKS.map(s => (
-              <motion.a
-                key={s.name}
-                href={s.url}
+            <div className="pt-2">
+              <a
+                href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={s.name}
-                whileHover={{ scale: 1.15, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                style={{
-                  width: '40px', height: '40px', borderRadius: '12px',
-                  background: '#fff',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  textDecoration: 'none', color: '#EA580C',
-                  border: '1px solid rgba(249,115,22,0.12)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, #F97316, #EA580C)';
-                  e.currentTarget.style.color = '#fff';
-                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(249,115,22,0.25)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = '#fff';
-                  e.currentTarget.style.color = '#EA580C';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.04)';
-                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white bg-[#320472]/70 hover:bg-[#320472] border border-[#320472] shadow-md shadow-[#320472]/30 transition-all"
               >
-                {s.icon}
-              </motion.a>
-            ))}
+                <MessageSquare className="w-3.5 h-3.5 text-orange-400" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Navigation Columns */}
+          {FOOTER_NAV.map((col, idx) => (
+            <div key={idx} className="space-y-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-white">
+                {col.title}
+              </div>
+              <ul className="space-y-2 text-xs sm:text-sm">
+                {col.links.map((link, lIdx) => (
+                  <li key={lIdx}>
+                    {link.to ? (
+                      <Link
+                        to={link.to}
+                        className="text-slate-400 hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        onClick={(e) => !link.isExternal && handleAnchorClick(e, link.href)}
+                        target={link.isExternal ? '_blank' : undefined}
+                        rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                        className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+        </div>
+
+        {/* Regulatory & Disclaimer */}
+        <div className="py-8 border-b border-white/5 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+          <p>
+            <strong>Disclaimer:</strong> Brosa is a financial technology platform, not a licensed bank or deposit-taking institution. All financial transactions, including local and cross-border payments, fiat currency transfers, mobile money transactions, and bank settlements, are facilitated through licensed financial institutions and authorized payment service providers in their respective jurisdictions.
+          </p>
+          <p className='py-4'>All third-party trademarks, logos, and brand names are the property of their respective owners.
+          </p>
+        </div>
+
+        {/* Bottom copyright & status */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div>
+            © {currentYear} Brosa AI Inc. All rights reserved. Designed for Africa and the World.
+          </div>
+
+          <div className="flex items-center gap-2 text-emerald-400 font-mono text-[11px]">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>All Systems Operational (99.9% Uptime)</span>
           </div>
         </div>
+
       </div>
     </footer>
   );
